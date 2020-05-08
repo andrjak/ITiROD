@@ -1,0 +1,226 @@
+:root {
+    --main-dark-gray: #2A2626;
+    --main-light-gray: #C4C4C4;
+}
+
+*:focus
+{
+    outline: none;
+}
+
+html {
+    font-family: sans-serif;
+    line-height: 1.15;  /*Пространство между строками*/
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    background-color: var(--main-dark-gray);
+  }
+
+body {
+    color: black;
+    background-color: var(--main-dark-gray) !important;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+    height: 92vh;
+}
+
+header {
+    margin: 0;
+}
+
+nav {
+    margin: 0;
+    padding: 0;
+    background-color: var(--main-light-gray);
+    position: sticky;
+}
+
+li a {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 4px 16px;
+    text-decoration: none;
+    font-style: oblique;
+    font-size: large;
+}
+
+.navbar-nav {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style-type: none;
+    display: flex;
+    flex-flow: row wrap;
+    overflow: hidden;
+}
+
+.navbar-item {
+    margin: 30;
+    color: black;
+    font-style: normal;
+}
+
+#search_form {
+    margin-left: 3%;
+}
+
+.navbar-link {
+    color: black !important;
+    font-style: normal;
+    display: block;
+    width: 60px;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+a:hover {
+    color: darkgreen;
+}
+
+.form-search {
+    margin: 0;
+    padding: 0;
+    padding-top: 7px;
+    display: flex;
+}
+
+.form-search-text {
+    height: 24px;
+    width: 600px;
+    border-radius: 25px;
+}
+
+.form-search-btn {
+    height: 24px;
+    width: 24px;
+}
+
+.container {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-flow: row wrap;
+    height: 100%;
+}
+
+.card {
+    margin: 20px;
+    margin-bottom: 10px;
+    background: var(--main-light-gray);
+    flex: 200px; /*Устанавливаем минимальный размер блока*/
+    border-radius: 10%;
+    height: 94%;
+}
+
+.player {
+    padding: 0;
+    height: 100%;
+    height: 100%;
+}
+
+.player-img {
+    margin-top: 3%;
+    margin-left: 2%;
+    margin-right: 2%;
+    height: 66%;
+    min-width: 96%;
+
+    border-radius: 20px;
+    background-color: var(--main-dark-gray);
+}
+
+.player-body {
+    margin-top: 2%;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-bottom: 3%;
+    width: 96%;
+    height:20%;
+    background-color: var(--main-dark-gray);
+    border-radius: 10px;
+}
+
+.player-btn-group {
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+/**/
+.playlist {
+    margin-top: 1%;
+    margin-bottom: 1%;
+    display: flex;
+    flex-flow: column wrap;
+    list-style-type: none;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+.playlist-item {
+    display: flex;
+    background-color: var(--main-dark-gray);
+    margin: 2%;
+    border-radius: 5%;
+    min-height: 15%;
+    max-height: 20%;
+}
+
+.playlist-item-img {
+    height: 100%;
+    width: 70px;
+}
+
+.ctrl-btn-group {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    display: flex;
+    padding-left: 5%;
+    padding-right: 5%;
+    height: 100%;
+    width: 75%;
+}
+
+.ctrl-btn {
+    min-width: 28%;
+    max-width: 30%;
+    height: 95%;
+}
+
+
+/*Control button*/
+.button
+{
+    width: 26px;
+    height: 26px;
+    padding: 25px;
+    background-color:black;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.button i
+{
+    display: block;
+    color: var(--main-light-gray);
+    font-size: 26px;
+    text-align: center;
+    line-height: 1;
+}
+
+.button:hover
+{
+    background-color: var(--main-light-gray);
+}
+
+.button:hover i
+{
+    color: var(--main-dark-gray);
+}
