@@ -1,7 +1,4 @@
-:root {
-    --main-dark-gray: #2A2626;
-    --main-light-gray: #C4C4C4;
-}
+@import "Colors.css";
 
 *:focus
 {
@@ -15,7 +12,9 @@ html {
     -ms-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
     background-color: var(--main-dark-gray);
-  }
+    height: 100%;
+    width: 100%;
+}
 
 body {
     color: black;
@@ -25,7 +24,13 @@ body {
     font-weight: 400;
     line-height: 1.5;
     margin: 0;
-    height: 92vh;
+    height: 100%;
+    width: 100%;
+}
+
+main {
+    width: 100%;
+    height: 100%;
 }
 
 header {
@@ -117,47 +122,6 @@ a:hover {
     height: 94%;
 }
 
-.player {
-    padding: 0;
-    height: 100%;
-    height: 100%;
-}
-
-.player-img {
-    margin-top: 3%;
-    margin-left: 2%;
-    margin-right: 2%;
-    height: 66%;
-    min-width: 96%;
-
-    border-radius: 20px;
-    background-color: var(--main-dark-gray);
-}
-
-.player-body {
-    margin-top: 2%;
-    margin-left: 2%;
-    margin-right: 2%;
-    margin-bottom: 3%;
-    width: 96%;
-    height:20%;
-    background-color: var(--main-dark-gray);
-    border-radius: 10px;
-}
-
-.player-btn-group {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-flow: row wrap;
-    width: 100%;
-    margin-left: 10%;
-    margin-right: 10%;
-    padding-left: 2%;
-    padding-right: 2%;
-    border-color: black;
-}
-
 /**/
 .playlist {
     margin-top: 1%;
@@ -181,6 +145,8 @@ a:hover {
 .playlist-item-img {
     height: 100%;
     width: 70px;
+    max-width: 100px;
+    min-width: 50px;
 }
 
 .ctrl-btn-group {
@@ -201,15 +167,6 @@ a:hover {
 
 
 /*Control button*/
-.button
-{
-    width: 26px;
-    height: 26px;
-    padding: 25px;
-    background-color:black;
-    border-radius: 6px;
-    cursor: pointer;
-}
 
 .button i
 {
@@ -228,4 +185,45 @@ a:hover {
 .button:hover i
 {
     color: var(--main-dark-gray);
+}
+
+/*Login-Registration*/
+
+.bacground-log-reg
+{
+    background-color: var(--main-light-gray);
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+.main-log-reg
+{
+    margin-left: 20%;
+    margin-right: 20%;
+    background-color: var(--main-dark-gray);
+    height: 100%;
+    width: 60%;
+    border-radius: 5%;
+}
+
+.form-log-reg
+{
+    width: 100%;
+    margin: 0;
+}
+
+.form-item
+{
+    width: 60%;
+    height: 15%;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    font-style: oblique;
+    font-size: large;
+    background-color: var(--main-light-gray);
+    border: 2px;
+    border-radius: 5px;
+    border-color: black;
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Another music player</title>
+    <meta name="author" content="Valetko Andrey"/>
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.3.1/css/solid.css'> <!--Бесплатные иконки для приложения-->
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.3.1/css/fontawesome.css'> <!--Используются для кнопок плеера-->
+    <link href="./styles/main_stile.css" rel="stylesheet"/>
+    <div id="dynamic-styles"></div>
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/7.14.5/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/7.14.5/firebase-auth.js"></script>
+    <script defer src="/__/firebase/7.14.5/firebase-database.js"></script>
+    <script defer src="/__/firebase/7.14.5/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/7.14.5/firebase-storage.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
+  </head>
+  <body>
+    <noscript>For the site to work, you must enable scripts</noscript>
+    <header id="navbar"></header>
+    <main id="app-root"></main>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
