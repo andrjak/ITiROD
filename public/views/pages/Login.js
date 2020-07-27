@@ -26,8 +26,8 @@ let Login = {
             var errorMessage = error.message;
             // ...
             });
+            document.location.href = "/#/MyMusic";
         });
-        document.location.href = "/#/MyMusic";
     }
 }
 

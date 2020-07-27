@@ -1,5 +1,6 @@
 "use strict"
 
+// Скрипт для управления навигацией и основными возможностями сайта
 import Utils from "./actions/Utils.js";
 
 import Navbar from "./views/components/Navbar.js";
@@ -18,7 +19,7 @@ import Playlists from "./views/pages/Playlists.js";
 // Supported routes
 const routes =
 {
-    "/login" : Login,
+    "/Login" : Login,
     "/registration": Registration,
     "/mymusic" : MyMusic,
     "/currentplaylist" : CurrentPlaylist,
@@ -42,8 +43,8 @@ const router = async () =>
     // If the parsed URL is not in our list of supported routes, select the 404 page instead
     let page = routes[parsedURL] ? routes[parsedURL] : Login
 
-    switch (page)
-    {
+    switch (page) //!!! Динамическая загрузка стиля для каждой конкретной страницы
+    { // Нужно лучше продумать этот момент
         case Login:
             dynamic_style.innerHTML = await DynamicStyle.LoginRegistrationStyle();
             break;
@@ -61,20 +62,20 @@ const router = async () =>
             break;
     }
 
-    if (page !== Login && page !== Registration)
+    if (page !== Login && page !== Registration) // Динамическое добавления navbar на страницы кроме регистрации и входа
     {
         navbar.innerHTML = await Navbar.render();
         await Navbar.after_render();
     }
     else 
     {
-        while (navbar.firstChild) 
+        while (navbar.firstChild) //!!! Очистка navbar возможно стоит переделать
         {
             navbar.removeChild(navbar.firstChild);
         }
     }
 
-    content.innerHTML = await page.render();
+    content.innerHTML = await page.render(); // Прорисовка выбранной страницы
     await page.after_render();
 }
 

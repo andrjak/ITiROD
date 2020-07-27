@@ -12,9 +12,9 @@ let MyMusic = {
                                         <button class="ctrl-btn" type="image" name="play" alt="play">
                                         <i class="fas fa-play"></i>
                                         </button>
-                                        <button class="ctrl-btn" type="image" name="add" alt="add"/>
+                                        <button class="ctrl-btn" type="image" name="add" alt="add">
                                         </button>
-                                        <button class="ctrl-btn" type="image" name="options" alt="options"/>
+                                        <button class="ctrl-btn" type="image" name="options" alt="options">
                                         </button>
                                     </div>
                                 </li>
@@ -25,9 +25,9 @@ let MyMusic = {
                                         <button class="ctrl-btn" type="image" name="play" alt="play">
                                         <i class="fas fa-play"></i>
                                         </button>
-                                        <button class="ctrl-btn" type="image" name="add" alt="add"/>
+                                        <button class="ctrl-btn" type="image" name="add" alt="add">
                                         </button>
-                                        <button class="ctrl-btn" type="image" name="options" alt="options"/>
+                                        <button class="ctrl-btn" type="image" name="options" alt="options">
                                         </button>
                                     </div>
                                 </li>
