@@ -8,10 +8,10 @@ let DynamicStyle = {
     },
     MyMusicStyle : async () => 
     {
-        let style =
-        `
-        <link href="./styles/MyMusic.css" rel="stylesheet"/>
-        `
+        let style = ""
+        // `
+        // <link href="./styles/MyMusic.css" rel="stylesheet"/>
+        // `
         return style
     },
     PlaylistsStyle : async () =>

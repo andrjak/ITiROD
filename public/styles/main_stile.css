@@ -42,6 +42,7 @@ nav {
     padding: 0;
     background-color: var(--main-light-gray);
     position: sticky;
+    width: 100%;
 }
 
 li a {
@@ -61,6 +62,7 @@ li a {
     display: flex;
     flex-flow: row wrap;
     overflow: hidden;
+    width: 100%;
 }
 
 .navbar-item {
@@ -117,9 +119,9 @@ a:hover {
     margin: 20px;
     margin-bottom: 10px;
     background: var(--main-light-gray);
-    flex: 200px; /*Устанавливаем минимальный размер блока*/
+    flex: 1 200px; /*Устанавливаем минимальный размер блока*/
     border-radius: 10%;
-    height: 94%;
+    height: 92%;
 }
 
 /**/
@@ -131,32 +133,57 @@ a:hover {
     list-style-type: none;
     padding-left: 2%;
     padding-right: 2%;
+    overflow: auto;
 }
 
 .playlist-item {
     display: flex;
+    flex-flow: row wrap;
     background-color: var(--main-dark-gray);
     margin: 2%;
-    border-radius: 5%;
-    min-height: 15%;
-    max-height: 20%;
+    border-radius: 5px;
+    height: 20%;
+    overflow: hidden;
+    flex: 1;
+}
+
+.playlist-item.active
+{
+    border-color: gold;
 }
 
 .playlist-item-img {
-    height: 100%;
-    width: 70px;
-    max-width: 100px;
-    min-width: 50px;
+    /*margin-left: 3%;*/
+    /*width: 25%;
+    height: 100%;*/
+    margin-top: auto;
+    margin-bottom: auto;
+    /*width: 75px;*/
+    width: 20%;
+    height: 100px;
+    border-radius: 5px;
+    /*background-size: cover;*/
+    /*object-fit: cover;*/
 }
 
-.ctrl-btn-group {
-    margin-top: 5%;
-    margin-bottom: 5%;
+.song-ctrl-btn-group {
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
     display: flex;
-    padding-left: 5%;
-    padding-right: 5%;
-    height: 100%;
-    width: 75%;
+    height: 90%;
+    width: 40%;
+}
+
+.song-track-info
+{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 3%;
+    /*margin-right: auto;*/
+    height: 90%;
+    width: 37%;
+    color: gold;
 }
 
 .ctrl-btn {
@@ -185,6 +212,166 @@ a:hover {
 .button:hover i
 {
     color: var(--main-dark-gray);
+}
+
+/*Настройки плеера*/
+.player {
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.player-img {
+    margin-top: 3%;
+    margin-left: 3%;
+    margin-right: 3%;
+    height: 66%;
+    width: 94%;
+
+    border-radius: 10px;
+    background-color: var(--main-dark-gray);
+}
+
+.player-body {
+    display: flex;
+    flex-flow: column wrap;
+    margin-top: 2%;
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-bottom: 3%;
+    width: 94%;
+    height:20%;
+    background-color: var(--main-dark-gray);
+    border-radius: 5px;
+}
+
+.player-btn-group {
+    display: flex;
+    flex-flow: row wrap;
+    /* width: 96%; */
+    margin-top: 2%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2%;
+    /* background-color: blue; */
+}
+
+.button
+{
+    /* width: 26px;
+    height: 26px;
+    padding: 25px; */
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color:black;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.button.active
+{
+    border-color: gold;
+}
+
+.track-info
+{
+    margin-left: 3%;
+    margin-right: 3%;
+    color: gold;
+}
+
+/*Полоса прокрутки песни*/
+#track-time
+{
+    height: 20%;
+    margin-top: 1%;
+    margin-bottom: 2%;
+    flex-flow: raw wrap;
+    display: flex;
+}
+
+#track-time #current-time, #track-time #track-length
+{
+    color: gold;
+    background-color: transparent;
+    font-size: small;
+    height: auto;
+}
+
+#track-length
+{
+    margin-right: 5%;
+    margin-left: auto;
+}
+
+#current-time
+{
+    margin-left: 5%;
+}
+
+#s-area, #seek-bar
+{
+    position: relative;
+    height: 4px;
+    border-radius: 4px;
+}
+
+#s-area
+{
+    margin-top: 2%;
+    background-color: var(--main-light-gray);
+    cursor: pointer;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 0;
+}
+
+#ins-time
+{
+    position: absolute;
+    top: -29px;
+    color: white;
+    font-size: 12px;
+    white-space: pre;
+    padding: 5px 6px;
+    border-radius: 4px;
+	display:none;
+}
+
+#ins-time, #s-hover
+{
+    background-color: #3b3d50;
+}
+
+#s-hover
+{
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0.5;
+    z-index: 1;
+    background-color: goldenrod;
+}
+
+#seek-bar
+{
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    background-color: red;
+    transition: 0.2s ease width;
+    z-index: 2;
+}
+
+#exit-btn
+{
+    margin-left: auto;
 }
 
 /*Login-Registration*/

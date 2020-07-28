@@ -17,16 +17,16 @@ let Login = {
         let passwordElement = document.getElementById("password");
         document.getElementById("ok").addEventListener("click", () => 
         {
-            let email = emailElement.value.trim();
-            let password = passwordElement.value.trim();
+            // let email = emailElement.value.trim();
+            // let password = passwordElement.value.trim();
 
-            firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // ...
-            });
-            document.location.href = "/#/MyMusic";
+            // firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+            // // Handle Errors here.
+            // var errorCode = error.code;
+            // var errorMessage = error.message;
+            // // ...
+            // });
+            // document.location.href = "/#/MyMusic";
         });
     }
 }

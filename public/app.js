@@ -1,11 +1,13 @@
 "use strict"
 
-// Скрипт для управления навигацией и основными возможностями сайта
+// Скрипт для управления навигацией
 import Utils from "./actions/Utils.js";
 
+// Визуальные эелементы
 import Navbar from "./views/components/Navbar.js";
 import DynamicStyle from "./views/components/DynamicStyle.js";
 
+// Страницы
 import Login from "./views/pages/Login.js";
 import Registration from "./views/pages/Registration.js";
 import MyMusic from "./views/pages/MyMusic.js";
@@ -24,43 +26,42 @@ const routes =
     "/mymusic" : MyMusic,
     "/currentplaylist" : CurrentPlaylist,
     "/playlists" : Playlists
-}
+};
 
 const router = async () => 
 {
-    // Lazy load view element:
-    const dynamic_style = null || document.getElementById("dynamic-styles");
+    const dynamicStyle = null || document.getElementById("dynamic-styles");
     const navbar = null || document.getElementById("navbar");
     const content = null || document.getElementById("app-root");
+    const searchbar = null || document.getElementById("searchbar");
 
     // Get the parsed URl from the addressbar
-    let request = Utils.parseRequestURL()
+    let request = Utils.parseRequestURL();
 
-    // Parse the URL and if it has an id part, change it with the string ":id"
-    let parsedURL = (request.resource ? "/" + request.resource : "/") + (request.id ? "/:id" : "") + (request.verb ? "/" + request.verb : "")
+    let parsedURL = (request.resource ? "/" + request.resource : "/") + (request.id ? "/:id" : "") + (request.verb ? "/" + request.verb : "");
 
     // Get the page from our hash of supported routes.
     // If the parsed URL is not in our list of supported routes, select the 404 page instead
-    let page = routes[parsedURL] ? routes[parsedURL] : Login
+    let page = routes[parsedURL] ? routes[parsedURL] : Login;
 
-    switch (page) //!!! Динамическая загрузка стиля для каждой конкретной страницы
-    { // Нужно лучше продумать этот момент
-        case Login:
-            dynamic_style.innerHTML = await DynamicStyle.LoginRegistrationStyle();
-            break;
-        case Registration:
-            dynamic_style.innerHTML = await DynamicStyle.LoginRegistrationStyle();
-            break;
-        case MyMusic:
-            dynamic_style.innerHTML = await DynamicStyle.MyMusicStyle();
-            break;
-        case CurrentPlaylist:
-            dynamic_style.innerHTML = await DynamicStyle.CurrentPlaylistStyle();
-            break;
-        case Playlists:
-            dynamic_style.innerHTML = await DynamicStyle.PlaylistsStyle();
-            break;
-    }
+    // switch (page) //!!! Динамическая загрузка стиля для каждой конкретной страницы
+    // { // Нужно лучше продумать этот момент
+    //     case Login:
+    //         dynamicStyle.innerHTML = await DynamicStyle.LoginRegistrationStyle();
+    //         break;
+    //     case Registration:
+    //         dynamicStyle.innerHTML = await DynamicStyle.LoginRegistrationStyle();
+    //         break;
+    //     case MyMusic:
+    //         dynamicStyle.innerHTML = await DynamicStyle.MyMusicStyle();
+    //         break;
+    //     case CurrentPlaylist:
+    //         dynamicStyle.innerHTML = await DynamicStyle.CurrentPlaylistStyle();
+    //         break;
+    //     case Playlists:
+    //         dynamicStyle.innerHTML = await DynamicStyle.PlaylistsStyle();
+    //         break;
+    // }
 
     if (page !== Login && page !== Registration) // Динамическое добавления navbar на страницы кроме регистрации и входа
     {
@@ -79,8 +80,6 @@ const router = async () =>
     await page.after_render();
 }
 
-// Listen on hash change:
 window.addEventListener("hashchange", router);
 
-// Listen on page load:
 window.addEventListener("load", router);
