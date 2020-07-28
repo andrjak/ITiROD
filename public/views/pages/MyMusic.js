@@ -10,8 +10,10 @@ let MyMusic = {
                 <div class="player-body">
                     
                     <div class="track-info" id="player-track">
-                        <div id="track-name"></div>
-                        <em id="autor-name"></em>
+                        <div class="track-text-info">
+                            <div id="track-name"></div>
+                            <em id="autor-name"></em>
+                        </div>
                         <div id="s-area">
                             <div id="ins-time"></div>
                             <div id="s-hover"></div>
@@ -51,38 +53,9 @@ let MyMusic = {
 
         <article class="card card-right">
             <ul id="playlist" class="playlist">
-                <!-- <li class="playlist-item">
-                    <img class="playlist-item-img" src="./source/music_base.png" alt="song cover">
-                    <div class="ctrl-btn-group">
-                        <button class="ctrl-btn" type="image" name="play" alt="play">
-                            <i class="fas fa-play"></i>
-                        </button>
-                        <button class="ctrl-btn" type="image" name="add" alt="add">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                        <button class="ctrl-btn" type="image" name="options" alt="options">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                    </div>
-                </li>
 
-                <li class="playlist-item">
-                    <img class="playlist-item-img" src="./source/music_base.png" alt="song cover">
-                    <div class="ctrl-btn-group">
-                        <button class="ctrl-btn" type="image" name="play" alt="play">
-                            <i class="fas fa-play"></i>
-                        </button>
-                        <button class="ctrl-btn" type="image" name="add" alt="add">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                        <button class="ctrl-btn" type="image" name="options" alt="options">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                    </div>
-                </li> -->
             </ul>
         </article>
-        <!--<script defer src="../../actions/Audio.js"></script>-->
         `
         return view
     },

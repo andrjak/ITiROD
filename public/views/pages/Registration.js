@@ -2,11 +2,13 @@ let Registration = {
     render : async () => {
         let view =
         `
-            <form>
+        <div class="bacground-log-reg">
+            <form class="main-form">
                 <input class="form-item" type="text" name="email" placeholder="Email" maxlength="100"/>
                 <input class="form-item" type="password" name="password" placeholder="Password" maxlength="50">
                 <button class="form-item" name="ok">OK</button>
             </form>
+        <div>
         `
         return view
     },
