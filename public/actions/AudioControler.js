@@ -2,6 +2,7 @@
 
 import Song from "../views/components/Song.js";
 import Functions from "./AdditionalFunctions.js";
+import songElementCreater from "../views/components/SongElement.js";
 
 function init(currentPlaylist) // Коллекция с музыкой получаемая из бд
 {
@@ -36,13 +37,18 @@ function init(currentPlaylist) // Коллекция с музыкой полу�
     // Текущий плей лист
     var playlist = document.getElementById("playlist");
 
-    // Управляющие элементы
-    var audio = new Audio();
-    var currentTrackPosition = 0; // Номер текущей записи в плей листе
-    var selectedPosition = 0; // Позиция с которой воспроизоводится запись
-    var selectedTime = 0;
-    var playlistItemList = [];
-    var currentPlaylistItem = null;
+    if (window.audio === undefined)
+    {
+        // Управляющие элементы
+        window.audio = new Audio();
+        window.currentTrackPosition = 0; // Номер текущей записи в плей листе
+        window.selectedPosition = 0; // Позиция с которой воспроизоводится запись
+        window.selectedTime = 0;
+        window.playlistItemList = [];
+        window.currentPlaylistItem = null;
+
+        window.audio.loop = false; // По умолчанию выключенно
+    }
 
     // Обработчики событий
     function playPause()
@@ -205,7 +211,6 @@ function init(currentPlaylist) // Коллекция с музыкой полу�
         audio.src = currentTrack.trackPatch;
         trackImage.src = currentTrack.imagePatch;
 
-
         let durationMinutes = Math.floor(audio.duration / 60);
         let durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
         durationMinutes = durationMinutes < 10 ? "0" + durationMinutes : durationMinutes;
@@ -232,34 +237,13 @@ function init(currentPlaylist) // Коллекция с музыкой полу�
         let position = 0;
         for (let item of currentPlaylist)
         {
-            let elem = document.createElement("li");
-            elem.playlistPosition = position;
-            elem.trackPatch = item.trackPatch;
-            elem.classList.add("playlist-item");
-            elem.innerHTML = 
-            `<img class="playlist-item-img" src="` + item.imagePatch + `" alt="song cover" >
-            <div class="song-track-info">
-                <div class="track-name">` + item.trackName + `</div>
-                <em class="autor-name">` + item.autor + `</em>
-            </div>
-            <div class="song-ctrl-btn-group">
-                <button class="song-ctrl-btn button" name="play" alt="play">
-                    <i class="fas fa-play"></i>
-                </button>
-                <button class="song-ctrl-btn button" name="add" alt="add">
-                    <i class="fas fa-plus"></i>
-                </button>
-                <button class="song-ctrl-btn button" name="options" alt="options">
-                    <i class="fas fa-ellipsis-v"></i>
-                </button>
-            </div>`
-
+            let elem = songElementCreater(position, item.trackPatch, item.imagePatch, item.trackName, item.autor);
             playlist.append(elem);
             position++;
         }
     }
 
-    function start()
+    function run()
     {
         currentPlaylist = [new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
                         new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
@@ -270,8 +254,6 @@ function init(currentPlaylist) // Коллекция с музыкой полу�
                         new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
                         new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1")]//!!! Временная строка
         // !!! Нужно сделать извлечение из БД
-
-        audio.loop = false; // По умолчанию выключенно
 
         addItemsInHTMList(); // Выводит текущий плейлист в документе
 
@@ -317,6 +299,6 @@ function init(currentPlaylist) // Коллекция с музыкой полу�
         sArea.addEventListener("click", playFromClickedPosition);
     }
 
-    start();
+    run();
 }
 export default init;

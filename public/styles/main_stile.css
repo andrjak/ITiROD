@@ -118,7 +118,7 @@ a:hover {
     margin: 20px;
     margin-bottom: 50px;
     background: var(--main-light-gray);
-    flex: 1 250px; 
+    flex: 1 550px; 
     border-radius: 10px;
     height: 100%;
     overflow: auto;
@@ -244,7 +244,7 @@ a:hover {
     margin-right: 3%;
     margin-bottom: 1%;
     width: 94%;
-    height:25%;
+    height: 25%;
     background-color: var(--main-dark-gray);
     border-radius: 5px;
 }

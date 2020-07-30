@@ -1,17 +1,24 @@
+import AudioControler from "../../actions/AudioControler.js";
+
 let CurrentPlaylist = {
     render : async () => {
         let view =
         `
-        <link href="./styles/CurrentPlaylist.css" rel="stylesheet"/>
-        <div class="container">
         <article class="card card-left">
             <div class="player">
-                <img class="player-img" src="../source/music_base.png" alt="song cover" width="90%" height="66%"/>
+                <img id="player-img" class="player-img" src="../source/music_base.png" alt="song cover"/>
                 <div class="player-body">
                     
                     <div class="track-info" id="player-track">
-                        <div id="album-name"></div>
-                        <div id="track-name"></div>
+                        <div class="track-text-info">
+                            <div id="track-name"></div>
+                            <em id="autor-name"></em>
+                        </div>
+                        <div id="s-area">
+                            <div id="ins-time"></div>
+                            <div id="s-hover"></div>
+                            <div id="seek-bar"></div>
+                        </div>
                         <div id="track-time">
                             <div id="current-time"></div>
                             <div id="track-length"></div>
@@ -19,17 +26,25 @@ let CurrentPlaylist = {
                     </div>
 
                     <div class="player-btn-group">
-                        <div class="button" id="play-previous">
-                          <i class="fas fa-backward"></i>
-                        </div>
+                        <button class="button" id="play-previous">
+                        <i class="fas fa-backward"></i>
+                        </button>
 
-                        <div class="button" id="play-pause-button">
-                          <i class="fas fa-play"></i>
-                        </div>
+                        <button class="button" id="play-pause-button">
+                        <i class="fas fa-play"></i>
+                        </button>
 
-                        <div class="button" id="play-next">
-                          <i class="fas fa-forward"></i>
-                        </div>
+                        <button class="button" id="play-next">
+                        <i class="fas fa-forward"></i>
+                        </button>
+
+                        <button class="button" id="play-mix">
+                            <i class="fas fa-random"></i>
+                        </button>
+
+                        <button class="button" id="play-repeat">
+                            <i class="fas fa-redo-alt"></i>
+                        </button>
                     </div>
 
                 </div>
@@ -37,41 +52,16 @@ let CurrentPlaylist = {
         </article>
 
         <article class="card card-right">
-            <ul class="playlist" id="playlist">
-                <li class="playlist-item">
-                    <img class="playlist-item-img" src="../source/music_base.png" alt="song cover">
-                    <div class="ctrl-btn-group">
-                        <button class="ctrl-btn" type="image" name="play" alt="play">
-                            <i class="fas fa-play"></i>
-                        </button>
-                        <button class="ctrl-btn" type="image" name="add" alt="add"/>
-                        </button>
-                        <button class="ctrl-btn" type="image" name="options" alt="options"/>
-                        </button>
-                    </div>
-                </li>
+            <ul id="playlist" class="playlist">
 
-                <li class="playlist-item">
-                    <img class="playlist-item-img" src="../source/music_base.png" alt="song cover">
-                    <div class="ctrl-btn-group">
-                        <button class="ctrl-btn" type="image" name="play" alt="play">
-                        <i class="fas fa-play"></i>
-                        </button>
-                        <button class="ctrl-btn" type="image" name="add" alt="add"/>
-                        </button>
-                        <button class="ctrl-btn" type="image" name="options" alt="options"/>
-                        </button>
-                    </div>
-                </li>
             </ul>
         </article>
-        </div>
         `
         return view
     },
     after_render : async () => 
     {
-
+        AudioControler();
     }
 }
 

@@ -1,3 +1,5 @@
+import NavbarControler from "../../actions/NavbarControler.js";
+
 let navbar = {
     render : async () => {
         let view =  /*html*/
@@ -23,18 +25,7 @@ let navbar = {
     },
     after_render : async () => 
     {
-        document.getElementById("exit-btn").addEventListener("click", () =>
-        {
-            firebase.auth().signOut().then(function() 
-            {
-                // Sign-out successful.
-                document.location.href = "/#/Login";
-            }).catch(function(error) 
-            {
-                alert("Something went wrong:" + error);
-                // An error happened.
-            }); 
-        });
+        NavbarControler();
     }
 }
 
