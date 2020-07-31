@@ -8,11 +8,13 @@ function init()
 
     signInElement.addEventListener("click", () => 
     {
+        let flag = false;
         firebase.auth().signInWithEmailAndPassword(emailElement.value, passwordElement.value).catch(
             function (error) 
             {
                 let errorCode = error.code;
                 let errorMessage = error.message;
+                flag = true;
                 
                 if (errorCode === "auth/wrong-password") 
                 {
@@ -25,7 +27,7 @@ function init()
                 }
             });
 
-        if (firebase.auth().currentUser !== null)
+        if (!flag)
         {
             document.location.href = "/#/CurrentPlaylist";
         }

@@ -1,3 +1,5 @@
+"use strict"
+
 import AudioControler from "../../actions/AudioControler.js";
 
 let CurrentPlaylist = {

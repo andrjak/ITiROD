@@ -1,3 +1,5 @@
+"use strict"
+
 import RegistrationControler from "../../actions/RegistrationControler.js";
 
 let Registration = {

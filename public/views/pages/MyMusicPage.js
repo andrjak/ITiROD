@@ -1,3 +1,5 @@
+"use strict"
+
 import MyMusicControler from "../../actions/MyMusicControler.js";
 
 let MyMusic = {

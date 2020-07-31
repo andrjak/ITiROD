@@ -7,8 +7,8 @@ function init (myMusicPlaylist, recommendPlaylist)
 {
     const baseImage = "../source/music_base.png";
 
-    var myMusicPlaylistElement   = document.getElementById("my-playlist");
-    var recommendPlaylistElement = document.getElementById("recommend-playlist");
+    let myMusicPlaylistElement   = document.getElementById("my-playlist");
+    let recommendPlaylistElement = document.getElementById("recommend-playlist");
 
     myMusicPlaylist = [new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
     new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
@@ -46,12 +46,8 @@ function init (myMusicPlaylist, recommendPlaylist)
         }
     }
 
-    function run()
-    {
-        playlistInit();
-    }
+    playlistInit();
 
-    run();
 }
 
 export default init;

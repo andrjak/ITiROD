@@ -437,7 +437,49 @@ a.form-item, button.form-item
     width: 45%;
 }
 
-html form
+html .main-form
 {
     background-color: var(--main-light-gray);
+}
+
+.scroler
+{
+    list-style-type: none;
+    background-color: var(--main-light-gray);
+    overflow: auto;
+    display: flex;
+    flex-flow: row;
+    width: 96%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 96%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    padding: 0;
+}
+
+.scroler-item
+{
+    flex: 1 150px;
+    height: 96%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    width: 20%;
+    max-width: 20%;
+    background-color: var(--main-dark-gray);
+}
+
+.playlist-info
+{
+    margin-left: 3%;
+    margin-right: 3%;
+    color: gold;
+    font-size: smaller;
+    display: flex;
+    flex-flow: column wrap;
+}
+
+.playlist-button-group
+{
+    background-image: url(../source/music_base.png);
 }

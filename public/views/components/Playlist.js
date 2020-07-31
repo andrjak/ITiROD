@@ -1,14 +1,14 @@
-"use stricct"
+"use strict"
 
-class Song {
-    constructor(status, trackName, autor, trackPatch, imagePatch, publisher, publicationTime)
+class Playlist {
+    constructor(status, name, autor, tracks, imagePatch, publisher, publicationTime)
     {
-        if (arguments.length < 7)
+        if (arguments.length < 6)
         {
             this.status = false;
-            this.trackName = null;
+            this.name = null;
             this.autor = null;
-            this.trackPatch = null;
+            this.tracks = null;
             this.imagePatch = null;
             this.publisher = null;
             this.publicationTime = null;
@@ -16,9 +16,9 @@ class Song {
         else
         {
             this.status = status;
-            this.trackName = trackName;
+            this.name = name;
             this.autor = autor;
-            this.trackPatch = trackPatch;
+            this.tracks = tracks;
             this.imagePatch = imagePatch;
             this.publisher = publisher;
             this.publicationTime = publicationTime;
@@ -26,4 +26,4 @@ class Song {
     }
 }
 
-export default Song;
+export default Playlist;

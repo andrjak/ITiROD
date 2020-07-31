@@ -1,3 +1,5 @@
+"use strict"
+
 import LoginControler from "../../actions/LoginControler.js";
 
 let Login = {

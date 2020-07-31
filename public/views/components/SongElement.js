@@ -1,3 +1,5 @@
+"use strict"
+
 function songElementCreater(position, trackPatch, imagePatch, trackName, autor, status)
 {
     let elem = document.createElement("li");

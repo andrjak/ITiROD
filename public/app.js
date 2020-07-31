@@ -1,22 +1,19 @@
 "use strict"
 
-// Скрипт для управления навигацией
 import Utils from "./actions/Utils.js";
 
-// Визуальные эелементы
-import Navbar from "./views/components/Navbar.js";
+import Navbar from "./views/components/NavbarElement.js";
 
-// Страницы
-import Login from "./views/pages/Login.js";
-import Registration from "./views/pages/Registration.js";
-import MyMusic from "./views/pages/MyMusic.js";
-import CurrentPlaylist from "./views/pages/CurrentPlaylist.js";
-import Playlists from "./views/pages/Playlists.js";
+import Login from "./views/pages/LoginPage.js";
+import Registration from "./views/pages/RegistrationPage.js";
+import MyMusic from "./views/pages/MyMusicPage.js";
+import CurrentPlaylist from "./views/pages/CurrentPlaylistPage.js";
+import Playlists from "./views/pages/PlaylistsPage.js";
 
 // Supported routes
 const routes =
 {
-    "/Login"           : Login,
+    "/login"           : Login,
     "/registration"    : Registration,
     "/mymusic"         : MyMusic,
     "/"                : MyMusic,
@@ -39,10 +36,10 @@ const router = async () =>
     // If the parsed URL is not in our list of supported routes, select the 404 page instead
     let page = routes[parsedURL] ? routes[parsedURL] : CurrentPlaylist;
 
-    if (firebase.auth().currentUser === null && (page !== Login && page !== Registration))
-    {
-        page = Login;
-    }
+    // if (firebase.auth().currentUser === null && (page !== Login && page !== Registration))
+    // {
+    //     page = Login;
+    // }
 
     if (page !== Login && page !== Registration) // Динамическое добавления navbar на страницы кроме регистрации и входа
     {
