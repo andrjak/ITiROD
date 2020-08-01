@@ -452,21 +452,30 @@ html .main-form
     width: 96%;
     margin-left: auto;
     margin-right: auto;
-    height: 96%;
+    height: 92%;
     margin-top: 2%;
     margin-bottom: 2%;
     padding: 0;
+    border-radius: 15px;
+    border-width: 3px;
+    border-style: inset;
+    border-color: silver;
 }
 
 .scroler-item
 {
-    flex: 1 150px;
-    height: 96%;
-    margin-top: 1%;
-    margin-bottom: 1%;
+    height: 94%;
+    /*margin-top: 1%;
+    margin-bottom: 1%;*/
+    margin: 1%;
     width: 20%;
-    max-width: 20%;
+    min-width: 250px;
+    /*max-width: 600px;*/
+    min-height: 500px;
     background-color: var(--main-dark-gray);
+    border-radius: 15px;
+    display: flex;
+    flex-flow: column wrap;
 }
 
 .playlist-info
@@ -477,9 +486,40 @@ html .main-form
     font-size: smaller;
     display: flex;
     flex-flow: column wrap;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.playlist-name, .playlist-autor
+{
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.playlist-name
+{
+    font-size: small;
 }
 
 .playlist-button-group
 {
-    background-image: url(../source/music_base.png);
+    display: flex;
+    flex-flow: row wrap;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+    width: 100%;
+}
+
+.album-img
+{
+    width: 100%;
+    height: 60%;
+    border-radius: 15px;
+}
+
+.playlist-button
+{
+    margin: auto;
 }
