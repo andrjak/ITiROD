@@ -465,12 +465,9 @@ html .main-form
 .scroler-item
 {
     height: 94%;
-    /*margin-top: 1%;
-    margin-bottom: 1%;*/
     margin: 1%;
     width: 20%;
     min-width: 250px;
-    /*max-width: 600px;*/
     min-height: 500px;
     background-color: var(--main-dark-gray);
     border-radius: 15px;
@@ -522,4 +519,16 @@ html .main-form
 .playlist-button
 {
     margin: auto;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(196,196,196, 0.5);
 }

@@ -10,32 +10,32 @@ function init(currentPlaylist) // Коллекция с музыкой полу�
     const baseImage = "../source/music_base.png";
 
     // Информация о песне
-    var trackImage  = document.getElementById("player-img");
-    var playerTrack = document.getElementById("player-track");
-    var trackName   = document.getElementById("track-name");
-    var trackAutor  = document.getElementById("autor-name");
-    var trackTime   = document.getElementById("track-time");
-    var currentTime = document.getElementById("current-time");
-    var trackLength = document.getElementById("track-length");
+    let trackImage  = document.getElementById("player-img");
+    let playerTrack = document.getElementById("player-track");
+    let trackName   = document.getElementById("track-name");
+    let trackAutor  = document.getElementById("autor-name");
+    let trackTime   = document.getElementById("track-time");
+    let currentTime = document.getElementById("current-time");
+    let trackLength = document.getElementById("track-length");
 
     // Управление воспроизведением
-    var playPreviousButton = document.getElementById("play-previous");
-    var playPauseButton    = document.getElementById("play-pause-button");
-    var playNextButton     = document.getElementById("play-next");
-    var playRepeatButton   = document.getElementById("play-repeat");
-    var playMixButton      = document.getElementById("play-mix");
+    let playPreviousButton = document.getElementById("play-previous");
+    let playPauseButton    = document.getElementById("play-pause-button");
+    let playNextButton     = document.getElementById("play-next");
+    let playRepeatButton   = document.getElementById("play-repeat");
+    let playMixButton      = document.getElementById("play-mix");
 
     // Линия прокрутки и всплывающая табличка
-    var sArea   = document.getElementById("s-area");
-    var insTime = document.getElementById("ins-time");
-    var sHover  = document.getElementById("s-hover");
-    var seekBar = document.getElementById("seek-bar");
+    let sArea   = document.getElementById("s-area");
+    let insTime = document.getElementById("ins-time");
+    let sHover  = document.getElementById("s-hover");
+    let seekBar = document.getElementById("seek-bar");
 
     // Элементы отвечающие за изображение на кнопках (изменение после нажатия)
-    var playPauseButtonStyle = playPauseButton.querySelector("i"); // Должно работать
+    let playPauseButtonStyle = playPauseButton.querySelector("i"); // Должно работать
 
     // Текущий плей лист
-    var playlist = document.getElementById("playlist");
+    let playlist = document.getElementById("playlist");
 
     if (window.audio === undefined)
     {
@@ -119,12 +119,31 @@ function init(currentPlaylist) // Коллекция с музыкой полу�
         hideHover();
     }
 
-    function playlistItemHandler(event)
+    function playlistItemPlayHandler(event)
     {
-        let item = event.target.closest("li");
-        currentTrackPosition = item.playlistPosition;
-        selectTrack();
-        playPause();
+        if (event.target.classList.contains("play-button-event"))
+        {
+            let item = event.target.closest("li");
+            currentTrackPosition = item.playlistPosition;
+            selectTrack();
+            playPause();
+        }
+    }
+
+    function playlistItemAddHandler(event)
+    {
+        if (event.target.classList.contains("add-button-event"))
+        {
+            alert("Add: Don't Work!");
+        }
+    }
+
+    function playlistItemOptionsHandler(event)
+    {
+        if (event.target.classList.contains("options-button-event"))
+        {
+            alert("Options: Don't Work!");
+        }
     }
 
     function nextTrack()
@@ -280,7 +299,10 @@ function init(currentPlaylist) // Коллекция с музыкой полу�
         });
         playMixButton.addEventListener("click", /*!!!Не назначен*/ function(){});
 
-        playlist.addEventListener("click", playlistItemHandler);
+        playlist.addEventListener("click", playlistItemPlayHandler);
+        playlist.addEventListener("click", playlistItemAddHandler);
+        playlist.addEventListener("click", playlistItemOptionsHandler);
+        
         playlist.addEventListener("error", function (event)
         {
             event.target.src = baseImage;

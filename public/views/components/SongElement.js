@@ -13,14 +13,14 @@ function songElementCreater(position, trackPatch, imagePatch, trackName, autor, 
         <em class="autor-name">` + autor + `</em>
     </div>
     <div class="song-ctrl-btn-group">
-        <button class="song-ctrl-btn button" name="play" alt="play">
-            <i class="fas fa-play"></i>
+        <button class="button play-button-event">
+            <i class="fas fa-play play-button-event"></i>
         </button>
-        <button class="song-ctrl-btn button" name="add" alt="add">
-            <i class="fas fa-plus"></i>
+        <button class="button add-button-event">
+            <i class="fas fa-plus add-button-event"></i>
         </button>
-        <button class="song-ctrl-btn button" name="options" alt="options">
-            <i class="fas fa-ellipsis-v"></i>
+        <button class="button options-button-event">
+            <i class="fas fa-ellipsis-v options-button-event"></i>
         </button>
     </div>`;
 
