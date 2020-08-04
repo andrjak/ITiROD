@@ -63,7 +63,7 @@ let CurrentPlaylist = {
     },
     after_render : async () => 
     {
-        AudioControler();
+        await AudioControler();
     }
 }
 

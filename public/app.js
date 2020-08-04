@@ -36,10 +36,11 @@ const router = async () =>
     // If the parsed URL is not in our list of supported routes, select the 404 page instead
     let page = routes[parsedURL] ? routes[parsedURL] : CurrentPlaylist;
 
-    // if (firebase.auth().currentUser === null && (page !== Login && page !== Registration))
-    // {
-    //     page = Login;
-    // }
+    if (firebase.auth().currentUser === null && (page !== Login && page !== Registration))
+    {
+        document.location.href = "/#/Login";
+        page = Login;
+    }
 
     if (page !== Login && page !== Registration) // Динамическое добавления navbar на страницы кроме регистрации и входа
     {

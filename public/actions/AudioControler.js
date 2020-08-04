@@ -4,17 +4,16 @@ import Song from "../views/components/Song.js";
 import Functions from "./AdditionalFunctions.js";
 import songElementCreater from "../views/components/SongElement.js";
 
-function init(currentPlaylist) // Коллекция с музыкой получаемая из бд
+async function AudioControler() // Коллекция с музыкой получаемая из бд
 {
-    //Константы 
+    //Константы
     const baseImage = "../source/music_base.png";
 
+    let currentPlaylist = [];
     // Информация о песне
     let trackImage  = document.getElementById("player-img");
-    let playerTrack = document.getElementById("player-track");
     let trackName   = document.getElementById("track-name");
     let trackAutor  = document.getElementById("autor-name");
-    let trackTime   = document.getElementById("track-time");
     let currentTime = document.getElementById("current-time");
     let trackLength = document.getElementById("track-length");
 
@@ -37,17 +36,54 @@ function init(currentPlaylist) // Коллекция с музыкой полу�
     // Текущий плей лист
     let playlist = document.getElementById("playlist");
 
-    if (window.audio === undefined)
+    let playlistItemList = [];
+    let currentPlaylistItem = null;
+
+    if (window.audio === undefined) // Ленивое создание глобальных переменных
     {
-        // Управляющие элементы
         window.audio = new Audio();
         window.currentTrackPosition = 0; // Номер текущей записи в плей листе
         window.selectedPosition = 0; // Позиция с которой воспроизоводится запись
         window.selectedTime = 0;
-        window.playlistItemList = [];
-        window.currentPlaylistItem = null;
 
-        window.audio.loop = false; // По умолчанию выключенно
+        let music = firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("music");
+
+        music.get().then((querySnapshot) =>
+        {
+            querySnapshot.forEach((songPatchDoc) => 
+            {
+                let currentDoc = firebase.firestore().doc(songPatchDoc.data().patch);
+                currentDoc.get().then(async (doc) => 
+                {
+                    let item = doc.data();
+                    currentPlaylist.push(new Song(item.status, item.songName, item.songAutor, item.songPatch, item.imagePatch, doc.id, "1"));
+                    console.dir(currentPlaylist);//!!!
+                    run();
+                }).catch((error) =>
+                {
+                    console.log("Document error: " + error.message);
+                });
+            });
+        }).catch((error) => 
+        {
+            console.log("Collection error: " + error.message);
+        });
+    }
+    else
+    {
+        run();
+    }
+
+    function downloadFile(patch)
+    {
+        firebase.storage().refFromURL(patch).getDownloadURL().then(function(url) 
+        {
+            console.dir(url);//!!!
+            return url;
+        }).catch(function(error) 
+        {
+            alert("Download error: " + error.message);
+        });
     }
 
     // Обработчики событий
@@ -216,16 +252,22 @@ function init(currentPlaylist) // Коллекция с музыкой полу�
         Functions.fadeOut(insTime);
     }
 
-    function selectTrack()
+    function selectActiveTrack()
     {
-        let currentTrack = currentPlaylist[currentTrackPosition];
-
         if (currentPlaylist.length > 0)
         {
             currentPlaylistItem.classList.remove("active"); // Выделение активного элемента в плейлисте
             currentPlaylistItem = playlistItemList[currentTrackPosition];
             currentPlaylistItem.classList.add("active");
         }
+    }
+
+    function selectTrack()
+    {
+        let currentTrack = currentPlaylist[currentTrackPosition];
+
+        selectActiveTrack();
+
 
         audio.src = currentTrack.trackPatch;
         trackImage.src = currentTrack.imagePatch;
@@ -251,6 +293,32 @@ function init(currentPlaylist) // Коллекция с музыкой полу�
         seekBar.style.width = 0;
     }
 
+    function restartPage()
+    {
+        if (audio.paused)
+        {
+            playPauseButtonStyle.className = "fas fa-play";
+        }
+        else
+        {
+            playPauseButtonStyle.className = "fas fa-pause"; 
+        }
+        
+        selectActiveTrack();
+
+        if (audio.loop === true)
+        {
+            playRepeatButton.classList.add("active");
+        }
+
+        let currentTrack = currentPlaylist[currentTrackPosition];
+
+        trackName.textContent = currentTrack.trackName;
+        trackAutor.textContent = currentTrack.autor;
+
+        updateTime();
+    }
+
     function addItemsInHTMList() // Стартовая прогрузка элементов плейлиста (вынести html в отдельную функцию)
     {
         let position = 0;
@@ -264,22 +332,29 @@ function init(currentPlaylist) // Коллекция с музыкой полу�
 
     function run()
     {
-        currentPlaylist = [new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
-                        new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
-                        new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
-                        new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
-                        new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
-                        new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
-                        new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
-                        new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1")]//!!! Временная строка
-        // !!! Нужно сделать извлечение из БД
+        // currentPlaylist = [new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
+        //                 new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
+        //                 new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
+        //                 new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
+        //                 new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
+        //                 new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
+        //                 new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
+        //                 new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1")]//!!! Временная строка
+        // // !!! Нужно сделать извлечение из БД
 
         addItemsInHTMList(); // Выводит текущий плейлист в документе
 
         playlistItemList = playlist.querySelectorAll("li");
         currentPlaylistItem = playlistItemList[currentTrackPosition];
 
-        selectTrack();
+        if (audio.currentTime == 0)
+        {
+            selectTrack();
+        }
+        else    // Рестарт после перехода с другой страницы
+        {
+            restartPage();
+        }
 
         playPauseButton.addEventListener("click", playPause);
         playPreviousButton.addEventListener("click", previousTrack);
@@ -297,12 +372,12 @@ function init(currentPlaylist) // Коллекция с музыкой полу�
                 playRepeatButton.classList.remove("active");
             }
         });
-        playMixButton.addEventListener("click", /*!!!Не назначен*/ function(){});
+        playMixButton.addEventListener("click", function(){ alert("MixButton: Don't work") });
 
         playlist.addEventListener("click", playlistItemPlayHandler);
         playlist.addEventListener("click", playlistItemAddHandler);
         playlist.addEventListener("click", playlistItemOptionsHandler);
-        
+
         playlist.addEventListener("error", function (event)
         {
             event.target.src = baseImage;
@@ -315,12 +390,15 @@ function init(currentPlaylist) // Коллекция с музыкой полу�
 
         audio.addEventListener("ended", nextTrack);
         audio.addEventListener("timeupdate", updateTime);
+        audio.addEventListener("error", function (event) 
+        { 
+            alert(`An error has occurred. Audio cannot be played.
+            Check your connection and try starting another recording.`); 
+        });
 
         sArea.addEventListener("mousemove", showHover);
         sArea.addEventListener("mouseout", hideHover);
         sArea.addEventListener("click", playFromClickedPosition);
     }
-
-    run();
 }
-export default init;
+export default AudioControler;
