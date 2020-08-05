@@ -1,7 +1,17 @@
 "use strict"
 
-function songElementCreater(position, trackPatch, imagePatch, trackName, autor, status)
+function songElementCreater(position, trackPatch, imagePatch, trackName, autor, buttonType, status)
 {
+    let button;
+    if (buttonType === "delete")
+    {
+        button = { button: "button delete-button-event", i: "fas fa-trash-alt delete-button-event" };
+    }
+    else
+    {
+        button = { button: "button add-button-event", i: "fas fa-plus add-button-event" };
+    }
+
     let elem = document.createElement("li");
     elem.playlistPosition = position;
     elem.trackPatch = trackPatch;
@@ -16,8 +26,8 @@ function songElementCreater(position, trackPatch, imagePatch, trackName, autor, 
         <button class="button play-button-event">
             <i class="fas fa-play play-button-event"></i>
         </button>
-        <button class="button add-button-event">
-            <i class="fas fa-plus add-button-event"></i>
+        <button class="` + button.button + `">
+            <i class="` + button.i + `"></i>
         </button>
         <button class="button options-button-event">
             <i class="fas fa-ellipsis-v options-button-event"></i>

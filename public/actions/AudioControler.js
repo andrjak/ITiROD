@@ -4,12 +4,8 @@ import Song from "../views/components/Song.js";
 import Functions from "./AdditionalFunctions.js";
 import songElementCreater from "../views/components/SongElement.js";
 
-async function AudioControler() // Коллекция с музыкой получаемая из бд
+async function AudioControler()
 {
-    //Константы
-    const baseImage = "../source/music_base.png";
-
-    let currentPlaylist = [];
     // Информация о песне
     let trackImage  = document.getElementById("player-img");
     let trackName   = document.getElementById("track-name");
@@ -36,57 +32,54 @@ async function AudioControler() // Коллекция с музыкой полу
     // Текущий плей лист
     let playlist = document.getElementById("playlist");
 
-    let playlistItemList = [];
+    let playlistItemList = []; // Набор всех HTML элементов отображаемых в плейлисте
     let currentPlaylistItem = null;
+    let selectedTime = 0;
 
-    if (window.audio === undefined) // Ленивое создание глобальных переменных
+    // Первое открытие страницы. Создание глобальных переменных которые отвечают за фоновое воспроизведение
+    // и востановление страницы после возвращения с другой страницы сайта.
+    if (window.audio === undefined)
     {
-        window.audio = new Audio();
+        window.audio = new Audio(); // Объект отвечающий за воспроизведение музыки (должен быть доступен после возвращения на страницу)
         window.currentTrackPosition = 0; // Номер текущей записи в плей листе
         window.selectedPosition = 0; // Позиция с которой воспроизоводится запись
-        window.selectedTime = 0;
 
-        let music = firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("music");
-
-        music.get().then((querySnapshot) =>
+        if (window.currentPlaylist === undefined) // Получение плейлиста(пользовательского) из базы данных елси он не был получен рание
         {
-            querySnapshot.forEach((songPatchDoc) => 
+            window.isCurrentPlaylistUserPlaylist = true;
+            window.currentPlaylist = []; // Глобальная переменная отвечающая за текущий плей лист
+            window.userPlaylist = window.currentPlaylist;
+
+            let music = firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("music");
+
+            music.get().then((querySnapshot) =>
             {
-                let currentDoc = firebase.firestore().doc(songPatchDoc.data().patch);
-                currentDoc.get().then(async (doc) => 
+                querySnapshot.forEach((songPatchDoc) => 
                 {
-                    let item = doc.data();
-                    currentPlaylist.push(new Song(item.status, item.songName, item.songAutor, item.songPatch, item.imagePatch, doc.id, "1"));
-                    console.dir(currentPlaylist);//!!!
-                    run();
-                }).catch((error) =>
-                {
-                    console.log("Document error: " + error.message);
+                    let currentDoc = firebase.firestore().doc(songPatchDoc.data().patch);
+                    currentDoc.get().then((doc) => 
+                    {
+                        let item = doc.data();
+                        currentPlaylist.push(new Song(item.status, item.songName, item.songAutor, item.songPatch, item.imagePatch, doc.id, "1"));
+                        run();
+                    }).catch((error) =>
+                    {
+                        console.log("Document error: " + error.message);
+                    });
                 });
+            }).catch((error) => 
+            {
+                console.log("Collection error: " + error.message);
             });
-        }).catch((error) => 
-        {
-            console.log("Collection error: " + error.message);
-        });
+
+
+        }
     }
     else
     {
         run();
     }
 
-    function downloadFile(patch)
-    {
-        firebase.storage().refFromURL(patch).getDownloadURL().then(function(url) 
-        {
-            console.dir(url);//!!!
-            return url;
-        }).catch(function(error) 
-        {
-            alert("Download error: " + error.message);
-        });
-    }
-
-    // Обработчики событий
     function playPause()
     {
         setTimeout(function()
@@ -268,9 +261,10 @@ async function AudioControler() // Коллекция с музыкой полу
 
         selectActiveTrack();
 
-
-        audio.src = currentTrack.trackPatch;
-        trackImage.src = currentTrack.imagePatch;
+        setSourceFromStorage(currentTrack.trackPatch, audio);
+        setSourceFromStorage(currentTrack.imagePatch, trackImage);
+        //audio.src = currentTrack.trackPatch;
+        //trackImage.src = currentTrack.imagePatch;
 
         let durationMinutes = Math.floor(audio.duration / 60);
         let durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
@@ -291,6 +285,24 @@ async function AudioControler() // Коллекция с музыкой полу
         trackAutor.textContent = currentTrack.autor;
 
         seekBar.style.width = 0;
+    }
+
+    function setSourceFromStorage(patch, sourceElement)
+    {
+        if (String(patch).indexOf("gs:") == 0)
+        {
+            firebase.storage().refFromURL(patch).getDownloadURL().then(function(url) 
+            {
+                sourceElement.src = url;
+            }).catch(function(error) 
+            {
+                alert("Download error: " + error.message);
+            });
+        }
+        else
+        {
+            sourceElement.src = patch;
+        }
     }
 
     function restartPage()
@@ -317,6 +329,18 @@ async function AudioControler() // Коллекция с музыкой полу
         trackAutor.textContent = currentTrack.autor;
 
         updateTime();
+
+        setSourceFromStorage(currentTrack.imagePatch, trackImage);
+
+        let counter = 0;
+        for (let item of playlist.querySelectorAll("img"))
+        {
+            if (currentPlaylist[counter].imagePatch !== undefined)
+            {
+                setSourceFromStorage(currentPlaylist[counter], item);
+            }
+            counter++;
+        }
     }
 
     function addItemsInHTMList() // Стартовая прогрузка элементов плейлиста (вынести html в отдельную функцию)
@@ -324,7 +348,13 @@ async function AudioControler() // Коллекция с музыкой полу
         let position = 0;
         for (let item of currentPlaylist)
         {
-            let elem = songElementCreater(position, item.trackPatch, item.imagePatch, item.trackName, item.autor);
+
+            let elem = songElementCreater(position, item.trackPatch, baseImage, item.trackName, item.autor);
+            
+            if (item.imagePatch !== undefined)
+            {
+                setSourceFromStorage(item.imagePatch, elem.querySelector("img"));
+            }
             playlist.append(elem);
             position++;
         }
@@ -332,15 +362,15 @@ async function AudioControler() // Коллекция с музыкой полу
 
     function run()
     {
-        // currentPlaylist = [new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
+        // Используется для тестирования
+        // window.currentPlaylist = [new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
         //                 new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
         //                 new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
         //                 new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
         //                 new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
         //                 new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
         //                 new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
-        //                 new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1")]//!!! Временная строка
-        // // !!! Нужно сделать извлечение из БД
+        //                 new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1")]
 
         addItemsInHTMList(); // Выводит текущий плейлист в документе
 
@@ -372,7 +402,10 @@ async function AudioControler() // Коллекция с музыкой полу
                 playRepeatButton.classList.remove("active");
             }
         });
-        playMixButton.addEventListener("click", function(){ alert("MixButton: Don't work") });
+        playMixButton.addEventListener("click", function()
+        { 
+            alert("MixButton: Don't work") 
+        });
 
         playlist.addEventListener("click", playlistItemPlayHandler);
         playlist.addEventListener("click", playlistItemAddHandler);

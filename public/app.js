@@ -3,12 +3,17 @@
 import Utils from "./actions/Utils.js";
 
 import Navbar from "./views/components/NavbarElement.js";
+import Searchbar from "./views/components/SearchElement.js";
 
 import Login from "./views/pages/LoginPage.js";
 import Registration from "./views/pages/RegistrationPage.js";
 import MyMusic from "./views/pages/MyMusicPage.js";
 import CurrentPlaylist from "./views/pages/CurrentPlaylistPage.js";
 import Playlists from "./views/pages/PlaylistsPage.js";
+
+
+// Глобальные переменные используемые во всём приложении
+window.baseImage = "../source/music_base.png";
 
 // Supported routes
 const routes =
@@ -36,11 +41,11 @@ const router = async () =>
     // If the parsed URL is not in our list of supported routes, select the 404 page instead
     let page = routes[parsedURL] ? routes[parsedURL] : CurrentPlaylist;
 
-    if (firebase.auth().currentUser === null && (page !== Login && page !== Registration))
-    {
-        document.location.href = "/#/Login";
-        page = Login;
-    }
+    // if (firebase.auth().currentUser === null && (page !== Login && page !== Registration))
+    // {
+    //     document.location.href = "/#/Login";
+    //     page = Login;
+    // }
 
     if (page !== Login && page !== Registration) // Динамическое добавления navbar на страницы кроме регистрации и входа
     {
@@ -50,6 +55,16 @@ const router = async () =>
     else 
     {
         navbar.innerHTML = "";
+    }
+
+    if (page == MyMusic)
+    {
+        searchbar.innerHTML = await Searchbar.render();
+        await Searchbar.after_render();
+    }
+    else
+    {
+        searchbar.innerHTML = "";
     }
 
     content.innerHTML = await page.render(); // Прорисовка выбранной страницы
