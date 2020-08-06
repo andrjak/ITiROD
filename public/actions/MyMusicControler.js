@@ -3,7 +3,7 @@
 import songElementCreater from "../views/components/SongElement.js";
 import Song from "../views/components/Song.js";
 
-function init (myMusicPlaylist, recommendPlaylist)
+function init ()
 {
     let myMusicPlaylistElement   = document.getElementById("my-playlist");
     let recommendPlaylistElement = document.getElementById("recommend-playlist");
@@ -28,6 +28,8 @@ function init (myMusicPlaylist, recommendPlaylist)
 
 
     let myMusicPlaylist;
+    let recommendPlaylist;
+    
     if (window.userPlaylist !== undefined) // Если пользовательский плейлист уже создан то используем его
     {
         myMusicPlaylist = window.userPlaylist;

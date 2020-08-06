@@ -3,6 +3,8 @@
 import Song from "../views/components/Song.js";
 import Functions from "./AdditionalFunctions.js";
 import songElementCreater from "../views/components/SongElement.js";
+import modalPageControler from "./ModalPageControler.js";
+import ModalPageControler from "./ModalPageControler.js";
 
 async function AudioControler()
 {
@@ -33,7 +35,7 @@ async function AudioControler()
     let playlist = document.getElementById("playlist");
 
     let playlistItemList = []; // Набор всех HTML элементов отображаемых в плейлисте
-    let currentPlaylistItem = null;
+    let currentPlaylistItem = null; // Выбранный на данный момент элемент
     let selectedTime = 0;
 
     // Первое открытие страницы. Создание глобальных переменных которые отвечают за фоновое воспроизведение
@@ -80,6 +82,7 @@ async function AudioControler()
         run();
     }
 
+    // Обработчик события для кнопки play-pause меняет стиль кнопки и начинает/приостанавливает воспроизведение аудио
     function playPause()
     {
         setTimeout(function()
@@ -97,6 +100,7 @@ async function AudioControler()
         }, 300);
     }
 
+    // Обновление времени на счётчике и также передвежение ползунка
     function updateTime()
     {
         // Продолжительность записи
@@ -141,7 +145,8 @@ async function AudioControler()
         }
     }
 
-    function playFromClickedPosition() // Восприоизвести с выбранной позиции
+    // Восприоизвести с выбранной позиции
+    function playFromClickedPosition()
     {
         audio.currentTime = selectedPosition;
         seekBar.style.width = selectedTime;
@@ -171,10 +176,20 @@ async function AudioControler()
     {
         if (event.target.classList.contains("options-button-event"))
         {
-            alert("Options: Don't Work!");
+            let selectedSongItem = event.target.closest("li");
+            if (selectedSongItem === null)
+            {
+                console.log("option-button-event: 'li' item not found.");
+                return;
+            }
+
+            let modalPage = document.getElementById("modal-page");
+            modalPage.classList.add("active");
+            ModalPageControler(selectedSongItem.querySelector("img").src);
         }
     }
 
+    // Переход к следующей записи
     function nextTrack()
     {
         if (currentPlaylist.length > (currentTrackPosition + 1))
@@ -185,6 +200,7 @@ async function AudioControler()
         }
     }
 
+    // Переход к предыдущей записи
     function previousTrack()
     {
         if (0 < currentTrackPosition)
@@ -195,7 +211,8 @@ async function AudioControler()
         }
     }
 
-    function showHover(event) // Показать всплывающую табличку с временем в указанной точке
+    // Показать всплывающую табличку с временем в указанной точке
+    function showHover(event)
     { 
         selectedTime = event.clientX - sArea.getBoundingClientRect().left;
         selectedPosition = audio.duration * (selectedTime / sArea.offsetWidth);
@@ -239,22 +256,25 @@ async function AudioControler()
         Functions.fadeIn(insTime);
     }
 
-    function hideHover() // Скрыть всплывающую табличку с временем в указанной точке
+    // Скрыть всплывающую табличку с временем в указанной точке
+    function hideHover()
     {
         sHover.style.width = 0;
         Functions.fadeOut(insTime);
     }
 
+    // Выделение текущего активного элемента в плейлисте
     function selectActiveTrack()
     {
         if (currentPlaylist.length > 0)
         {
-            currentPlaylistItem.classList.remove("active"); // Выделение активного элемента в плейлисте
+            currentPlaylistItem.classList.remove("active"); 
             currentPlaylistItem = playlistItemList[currentTrackPosition];
             currentPlaylistItem.classList.add("active");
         }
     }
 
+    // Выбор новой записи из плейлиста
     function selectTrack()
     {
         let currentTrack = currentPlaylist[currentTrackPosition];
@@ -287,6 +307,9 @@ async function AudioControler()
         seekBar.style.width = 0;
     }
 
+    // Загрузка данных из firestorage
+    // * patch = Полный путь к файлу firestore в формате (gs:)
+    // * sourceElement объект с свойство src для которого устанавливается путь к загружаемому контенту
     function setSourceFromStorage(patch, sourceElement)
     {
         if (String(patch).indexOf("gs:") == 0)
@@ -305,6 +328,7 @@ async function AudioControler()
         }
     }
 
+    // Востановление страницы после возврата на неё
     function restartPage()
     {
         if (audio.paused)
@@ -343,7 +367,9 @@ async function AudioControler()
         }
     }
 
-    function addItemsInHTMList() // Стартовая прогрузка элементов плейлиста (вынести html в отдельную функцию)
+    // Стартовая прорисовка элементов плейлиста
+    // (К сожалению пока грузится сразу весь плейлист. Подумать об реализации AJAX через firebase)
+    function addItemsInHTMList()
     {
         let position = 0;
         for (let item of currentPlaylist)
@@ -372,20 +398,21 @@ async function AudioControler()
         //                 new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
         //                 new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1")]
 
-        addItemsInHTMList(); // Выводит текущий плейлист в документе
+        addItemsInHTMList();
 
         playlistItemList = playlist.querySelectorAll("li");
         currentPlaylistItem = playlistItemList[currentTrackPosition];
 
-        if (audio.currentTime == 0)
+        if (audio.currentTime == 0) // Первый вход на страницу
         {
             selectTrack();
         }
-        else    // Рестарт после перехода с другой страницы
+        else // Рестарт после перехода с другой страницы
         {
             restartPage();
         }
 
+        // Установка обработчиков событий
         playPauseButton.addEventListener("click", playPause);
         playPreviousButton.addEventListener("click", previousTrack);
         playNextButton.addEventListener("click", nextTrack);

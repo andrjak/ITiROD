@@ -9,7 +9,7 @@ let searchBar =
         let view =
         `<div class="form-search">
             <input class="form-search-text" type="text" placeholder="Search" aria-label="Search"/>
-            <input class="form-search-btn" type="image" src="../source/search.png" name="search" alt="search"/>
+            <input class="form-search-btn" type="image" src="../source/Search.png" name="search" alt="search"/>
         </div>`
 
         return view;

@@ -24,6 +24,40 @@
     <noscript>For the site to work, you must enable scripts</noscript>
     <header id="navbar"></header>
     <div id="searchbar"></div>
+
+    <div id="modal-page" class="modal">
+      <div class="modal-content">
+        <div class="modal-song-container">
+
+        <label for="file-field">
+            <a id="modal-get-image-button" style="cursor: pointer;">
+                <img id="modal_profile_img" height = "300px" width = "300px">
+            </a>
+        </label> 
+        
+        <input class="modal-file" type="file" id="file-field" accept="audio/*">
+
+          <div class="modal-song-info">
+            <div class="modal-close">
+              <button id="modal-close-button" title="Close Modal">&times;</button>
+            </div>
+
+            <div class="modal-form"> 
+              <input id="modal-name" type="text"></input>
+              <input id="modal-autor" type="text"></input>
+              <input id="modal-status" type="checkbox"></input>
+            </div>
+
+            <div class="modal-actions">
+              <button id="modal-update-button" class="button modal-button">Update</button>
+              <button id="modal-cancel-button" class="button modal-button">Logout</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
     <main id="app-root" class="container"></main>
     <script defer type="module" src="app.js"></script>
   </body>

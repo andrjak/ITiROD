@@ -242,15 +242,18 @@ a:hover {
 
 .player-body {
     display: flex;
-    flex-flow: column wrap;
+    flex-flow: column;
     margin-top: 2%;
     margin-left: 3%;
     margin-right: 3%;
     margin-bottom: 1%;
     width: 94%;
-    height: 25%;
+    /*height: 25%;*/
+    min-height: 25%;
+    height: auto;
     background-color: var(--main-dark-gray);
     border-radius: 5px;
+    overflow: auto;
 }
 
 .player-btn-group {
@@ -535,4 +538,109 @@ html .main-form
     height: 100%;
     overflow: auto;
     background-color: rgba(196,196,196, 0.5);
+    border-radius: 10px;
+    border-color: gold;
+    border-width: 3px;
+}
+
+.modal.active
+{
+    display: block;
+}
+
+.modal-file
+{
+    display: none;
+}
+
+.modal-song-container
+{
+    display: flex;
+    flex-flow: row wrap;
+}
+  
+.modal-song-container>.modal-song-info
+{
+    flex: 100px;
+    padding-left: 10px;
+}
+  
+.modal-song-container>img
+{
+    flex: 0 1 400px;
+    min-width: 150px;
+    min-height: 150px;
+    border-radius: 50%;
+    height: auto;
+    width: 150px;
+}
+
+.modal-content 
+{
+    background-color: var(--main-dark-gray);
+    border: 2px solid gold;
+    border-radius: 5px;
+    overflow: auto;
+    margin: 15% auto 10% auto;
+    width: 75%; 
+}
+
+.modal-button i
+{
+    color: gold;
+}
+
+.modal-button:hover
+{
+    background-color: var(--main-light-gray);
+}
+
+.modal-button:hover i
+{
+    color: var(--main-dark-gray);
+}
+
+.modal-song-info
+{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+}
+
+.modal-close
+{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  width: 100%;
+  font-size: large;
+}
+
+.modal-close button
+{
+    color: black;
+    font-size: large;
+    background-image: none; 
+    background-color: transparent;
+    outline: none;
+    border: 0;
+}
+
+.modal-close button:hover
+{
+    color: red;
+    cursor: pointer;
+}
+
+.modal-actions
+{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+}
+
+.modal-form
+{
+    display: flex;
+    flex-flow: column nowrap;
 }
