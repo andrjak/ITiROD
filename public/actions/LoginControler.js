@@ -8,13 +8,14 @@ function init()
 
     signInElement.addEventListener("click", () => 
     {
-        let flag = false;
-        firebase.auth().signInWithEmailAndPassword(emailElement.value, passwordElement.value).catch(
-            function (error) 
+        firebase.auth().signInWithEmailAndPassword(emailElement.value, passwordElement.value).then(() =>
+        {
+            document.location.href = "/#/CurrentPlaylist";
+        }).catch(
+            (error) =>
             {
                 let errorCode = error.code;
                 let errorMessage = error.message;
-                flag = true;
                 
                 if (errorCode === "auth/wrong-password") 
                 {
@@ -26,11 +27,6 @@ function init()
                     alert("Error" + errorCode + ": " + errorMessage);
                 }
             });
-
-        if (!flag)
-        {
-            document.location.href = "/#/CurrentPlaylist";
-        }
     });
 }
 

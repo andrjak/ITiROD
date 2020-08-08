@@ -185,7 +185,7 @@ async function AudioControler()
 
             let modalPage = document.getElementById("modal-page");
             modalPage.classList.add("active");
-            ModalPageControler(selectedSongItem.querySelector("img").src);
+            ModalPageControler("update", selectedSongItem.querySelector("img").src);
         }
     }
 

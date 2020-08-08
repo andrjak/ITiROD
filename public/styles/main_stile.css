@@ -281,6 +281,11 @@ a:hover {
     border-color: gold;
 }
 
+.button.active i
+{
+    color: gold;
+}
+
 .track-info
 {
     margin-left: 3%;
@@ -585,8 +590,22 @@ html .main-form
     width: 75%; 
 }
 
+.modal-button
+{
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color:black;
+    border-radius: 6px;
+    cursor: pointer;
+    color: gold;
+    font-size: large;
+}
+
 .modal-button i
 {
+    display: block;
+    text-align: center;
+    line-height: 1;
     color: gold;
 }
 
@@ -607,11 +626,14 @@ html .main-form
     justify-content: space-between;
 }
 
-.modal-close
+/* .modal-close
 {
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-end;
+  margin-left: auto;
+  margin-top: 3px;
+  margin-right: 3px;
   width: 100%;
   font-size: large;
 }
@@ -630,7 +652,7 @@ html .main-form
 {
     color: red;
     cursor: pointer;
-}
+} */
 
 .modal-actions
 {
@@ -643,4 +665,33 @@ html .main-form
 {
     display: flex;
     flex-flow: column nowrap;
+    width: 100%;
+}
+
+.modal-panel
+{
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.modal-input
+{
+    background-color: var(--main-light-gray);
+    border-radius: 10px;
+    font-size: medium;
+    width: 90%;
+    border-width: 2px;
+    border-color: silver;
+    color:black;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.modal-status-panel
+{
+    margin-left: auto;
+    margin-right: auto;
+    color: gold;
 }

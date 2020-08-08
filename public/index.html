@@ -29,28 +29,31 @@
       <div class="modal-content">
         <div class="modal-song-container">
 
-        <label for="file-field">
-            <a id="modal-get-image-button" style="cursor: pointer;">
-                <img id="modal_profile_img" height = "300px" width = "300px">
-            </a>
-        </label> 
-        
-        <input class="modal-file" type="file" id="file-field" accept="audio/*">
+          <label for="modal-img-field" style="display: block;">
+              <a id="modal-get-image-button" style="cursor: pointer;">
+                  <img id="modal_song_img" height = "300px" width = "300px">
+              </a>
+          </label>
+
+          <input class="modal-file" type="file" id="modal-img-field" accept="image/*">
 
           <div class="modal-song-info">
-            <div class="modal-close">
-              <button id="modal-close-button" title="Close Modal">&times;</button>
-            </div>
-
-            <div class="modal-form"> 
-              <input id="modal-name" type="text"></input>
-              <input id="modal-autor" type="text"></input>
-              <input id="modal-status" type="checkbox"></input>
+            <div class="modal-form">
+              <!-- <div class="modal-close">
+                <button id="modal-close-button" title="Close Modal">&times;</button>
+              </div> -->
+              <input class="modal-input" id="modal-name" type="text" placeholder="Song name">
+              <input class="modal-input" id="modal-autor" type="text" placeholder="Song autor">
+              <input class="modal-input" id="modal-song-patch" type="file" accept="audio/*">
+              <div class="modal-status-panel">
+                <span>Can other users listen to the song<span>
+                <input class="modal-input-checkbox" id="modal-status" type="checkbox"></input>
+              </div>
             </div>
 
             <div class="modal-actions">
-              <button id="modal-update-button" class="button modal-button">Update</button>
-              <button id="modal-cancel-button" class="button modal-button">Logout</button>
+              <button id="modal-update-button" class="modal-button">Ok</button>
+              <button id="modal-cancel-button" class="modal-button">Cancel</button>
             </div>
           </div>
 
