@@ -5,6 +5,9 @@ import Song from "../views/components/Song.js";
 
 function init ()
 {
+    // Константы
+    //const baseImage = "../source/music_base.png";
+
     let myMusicPlaylistElement   = document.getElementById("my-playlist");
     let recommendPlaylistElement = document.getElementById("recommend-playlist");
 

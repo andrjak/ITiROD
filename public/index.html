@@ -42,9 +42,12 @@
               <!-- <div class="modal-close">
                 <button id="modal-close-button" title="Close Modal">&times;</button>
               </div> -->
-              <input class="modal-input" id="modal-name" type="text" placeholder="Song name">
-              <input class="modal-input" id="modal-autor" type="text" placeholder="Song autor">
-              <input class="modal-input" id="modal-song-patch" type="file" accept="audio/*">
+              <input class="modal-input" id="modal-name" type="text" placeholder="Song name" maxlength="30">
+              <input class="modal-input" id="modal-autor" type="text" placeholder="Song autor" maxlength="30">
+              <label class="modal-input active" id="modal-song-label" for="modal-song-patch">
+                <a>Select file (can drop)</a>
+                <input id="modal-song-patch" type="file" accept="audio/*" style="display: none;">
+              </label>
               <div class="modal-status-panel">
                 <span>Can other users listen to the song<span>
                 <input class="modal-input-checkbox" id="modal-status" type="checkbox"></input>

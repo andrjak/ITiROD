@@ -12,7 +12,6 @@ import CurrentPlaylist from "./views/pages/CurrentPlaylistPage.js";
 import Playlists from "./views/pages/PlaylistsPage.js";
 
 
-// Глобальные переменные используемые во всём приложении
 window.baseImage = "../source/music_base.png";
 
 // Supported routes

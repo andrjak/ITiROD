@@ -8,6 +8,9 @@ import ModalPageControler from "./ModalPageControler.js";
 
 async function AudioControler()
 {
+    // Константы
+    //const baseImage = "../source/music_base.png";
+
     // Информация о песне
     let trackImage  = document.getElementById("player-img");
     let trackName   = document.getElementById("track-name");

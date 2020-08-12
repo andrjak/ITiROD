@@ -695,3 +695,22 @@ html .main-form
     margin-right: auto;
     color: gold;
 }
+
+#modal-song-label
+{
+    display: none;
+}
+
+label a
+{
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
+}
+
+#modal-song-label.active
+{
+    display: block;
+}
