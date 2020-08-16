@@ -22,7 +22,7 @@ const routes =
     "/mymusic"         : MyMusic,
     "/"                : MyMusic,
     "/currentplaylist" : CurrentPlaylist,
-    "/playlists"       : Playlists
+    /*"/playlists"       : Playlists*/
 };
 
 const router = async () => 

@@ -2,36 +2,15 @@
 
 import songElementCreater from "../views/components/SongElement.js";
 import Song from "../views/components/Song.js";
+import Utils from "./Utils.js";
 
 function init ()
 {
-    // Константы
-    //const baseImage = "../source/music_base.png";
-
     let myMusicPlaylistElement   = document.getElementById("my-playlist");
     let recommendPlaylistElement = document.getElementById("recommend-playlist");
 
-    // myMusicPlaylist = [new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
-    // new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
-    // new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
-    // new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
-    // new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
-    // new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
-    // new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
-    // new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1")];//!!! Временная строка
-
-    // recommendPlaylist = [new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
-    // new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
-    // new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
-    // new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
-    // new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
-    // new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1"),
-    // new Song(false, "Dawn", "Skylike", "http://k003.kiwi6.com/hotlink/hshjwmwndw/2.mp3", baseImage, "79821843rt@gmail.com", "1"),
-    // new Song(false, "Me & You", "Alex Skrindo", "https://k003.kiwi6.com/hotlink/2rc3rz4rnp/1.mp3", "D:/Image/Windows.png", "79821843rt@gmail.com", "1")];//!!! Временная строка
-
-
-    let myMusicPlaylist;
-    let recommendPlaylist;
+    let myMusicPlaylist = [];
+    let recommendPlaylist = [];
     
     if (window.userPlaylist !== undefined) // Если пользовательский плейлист уже создан то используем его
     {
@@ -39,7 +18,7 @@ function init ()
     }
     else // Если пользовательский плейлист ещё не создан получаем его из бд
     {
-
+        Utils.bdUserPlaylistLoad(undefined, () => { myMusicPlaylist = window.userPlaylist; });
     }
 
     function playlistInit() // Стартовая прогрузка элементов плейлиста (вынести html в отдельную функцию)

@@ -12,9 +12,11 @@ let navbar = {
                 <li class="nav-item">
                     <a class="nav-link" href="/#/MyMusic">My Music</a>
                 </li>
+                <!--
                 <li class="nav-item">
                     <a class="nav-link" href="/#/Playlists">Play Lists</a>
                 </li>
+                -->
                 <li id="exit-btn" class="nav-item">
                     <a class="nav-link" href="/#/Login">Exit</a>
                 </li>

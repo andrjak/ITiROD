@@ -1,28 +1,14 @@
 "use stricct"
 
 class Song {
-    constructor(status, trackName, autor, trackPatch, imagePatch, publisher, publicationTime)
+    constructor(status, trackName, autor, trackPatch, imagePatch, dbId)
     {
-        if (arguments.length < 7)
-        {
-            this.status = false;
-            this.trackName = null;
-            this.autor = null;
-            this.trackPatch = null;
-            this.imagePatch = null;
-            this.publisher = null;
-            this.publicationTime = null;
-        }
-        else
-        {
-            this.status = status;
-            this.trackName = trackName;
-            this.autor = autor;
-            this.trackPatch = trackPatch;
-            this.imagePatch = imagePatch;
-            this.publisher = publisher;
-            this.publicationTime = publicationTime;
-        }
+        this.status = status;
+        this.trackName = trackName;
+        this.autor = autor;
+        this.trackPatch = trackPatch;
+        this.imagePatch = imagePatch;
+        this.dbId = dbId;
     }
 }
 
