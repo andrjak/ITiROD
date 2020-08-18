@@ -7,8 +7,10 @@ import Song from "../views/components/Song.js";
 // * mode - текущий режим окна create/update (возможно появятся ещё варианты)
 // * imageSrc - уже трансформированная ссылка на ресурс если она есть
 // * selectedSong - выбраная запись если она есть
-function ModalPageControler(mode, imageSrc, selectedSong)
+// * then - функция которая выполняется после добавления или обновления записи
+function ModalPageControler(mode, imageSrc, selectedSong, then)
 {
+    const baseImage = "../source/music_base.png";
     // Переменные для управления модальным окном (устанавливаются только при первом запуске)
     let modalPage = document.getElementById("modal-page");
     let modalImage = document.getElementById("modal_song_img");
@@ -31,27 +33,27 @@ function ModalPageControler(mode, imageSrc, selectedSong)
     let resultSong = undefined;
 
     // Выход с модального окна
-    modalCancelButton.addEventListener("click", event =>
+    modalCancelButton.onclick = event =>
     {
         modalPage.classList.remove("active");
-    });
+    };
 
     // Отключение стандартного поведения для события
-    modalPage.addEventListener("dragenter", event =>
+    modalPage.ondragenter = event =>
     {
         event.stopPropagation();
         event.preventDefault();
-    });
+    };
 
     // Отключение стандартного поведения для события
-    modalPage.addEventListener("dragover", event =>
+    modalPage.ondragover = event =>
     {
         event.stopPropagation();
         event.preventDefault();
-    });
+    };
 
     // Реакция на перетаскивание файла
-    modalPage.addEventListener("drop", event =>
+    modalPage.ondrop = event =>
     {
         if (mode == "create")
         {
@@ -62,10 +64,10 @@ function ModalPageControler(mode, imageSrc, selectedSong)
             songFile = data.files[0];
             modalSongText.textContent = data.files[0].name;
         }
-    });
+    };
 
     // Получение файла картинки при изменении пути
-    modalImagePatchInput.addEventListener("change", event =>
+    modalImagePatchInput.onchange = event =>
     {
         if (event.target.files[0] !== undefined)
         {
@@ -82,20 +84,20 @@ function ModalPageControler(mode, imageSrc, selectedSong)
                 })(modalImage);
             reader.readAsDataURL(event.target.files[0]);
         }
-    });
+    };
 
     // Получение файла песни при изменении пути
-    modalSongPatchInput.addEventListener("change", event =>
+    modalSongPatchInput.onchange = event =>
     {
         if (event.target.files[0] !== undefined)
         {
             songFile = event.target.files[0];
             modalSongText.textContent = songFile.name;
         }
-    });
+    };
 
     // Применить изменеия
-    modalUpdateButton.addEventListener("click", event =>
+    modalUpdateButton.onclick = event =>
     {
         if (mode == "create")
         {
@@ -107,7 +109,7 @@ function ModalPageControler(mode, imageSrc, selectedSong)
         }
 
         modalPage.classList.remove("active");
-    });
+    };
 
     function updateSong()
     {
@@ -158,28 +160,29 @@ function ModalPageControler(mode, imageSrc, selectedSong)
 
         if (window.userPlaylist !== undefined && window.userPlaylist !== null)
         {
-            for (let len = window.userPlaylist.length; len == 0; len--)
+            for (let len = 0; len < window.userPlaylist.length; len++)
             {
-                let pos = window.userPlaylist.findIndex(item => item.dbId === result.dbId);
-                if (pos == -1)
+                if (window.currentPlaylist[len].dbId == result.dbId)
                 {
-                    break;
+                    window.userPlaylist[len] = result;
                 }
-                window.userPlaylist[pos] = result;
             }
         }
 
         if (window.currentPlaylist !== undefined && window.currentPlaylist !== null)
         {
-            for (let len = window.currentPlaylist.length; len > 0; len--)
+            for (let len = 0; len < window.currentPlaylist.length; len++)
             {
-                let pos = window.currentPlaylist.findIndex(item => item.dbId == result.dbId);
-                if (pos == -1)
+                if (window.currentPlaylist[len].dbId == result.dbId)
                 {
-                    break;
+                    window.currentPlaylist[len] = result;
                 }
-                window.currentPlaylist[pos] = result;
             }
+        }
+
+        if (then !== undefined && typeof then == "function")
+        {
+            then();
         }
 
         return result;
@@ -258,6 +261,11 @@ function ModalPageControler(mode, imageSrc, selectedSong)
             window.userPlaylist[result];
         }
 
+        if (then !== undefined && typeof then == "function")
+        {
+            then();
+        }
+
         return result;
     }
 
@@ -265,7 +273,8 @@ function ModalPageControler(mode, imageSrc, selectedSong)
     // * mode - текущий режим окна create/update (возможно появятся ещё варианты)
     // * imageSrc - уже трансформированная ссылка на ресурс если она есть
     // * selectedSong - выбраная запись если она есть
-    function ModalPageControler (localMode, imageSrc, localSelectedSong)
+    // * then - функция которая выполняется после добавления или обновления записи
+    function ModalPageControler (localMode, imageSrc, localSelectedSong, then)
     {
         user = firebase.auth().currentUser;
         mode = localMode;
@@ -274,8 +283,9 @@ function ModalPageControler(mode, imageSrc, selectedSong)
         imageFile = undefined;
         songFile = undefined;
         modalStatusInput.checked = false;
-        modalImage.src = (imageSrc === undefined || imageFile === null) ? window.baseImage : imageSrc;
+        modalImage.src = (imageSrc === undefined || imageFile === null) ? baseImage : imageSrc;
         modalSongText.textContent = "Select file (can drop)";
+        console.dir(modalUpdateButton);
 
         if (selectedSong !== undefined)
         {

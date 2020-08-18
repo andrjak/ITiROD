@@ -6,9 +6,12 @@ import Utils from "./Utils.js";
 
 function init ()
 {
+    const baseImage = "../source/music_base.png";
+
     let myMusicPlaylistElement   = document.getElementById("my-playlist");
     let recommendPlaylistElement = document.getElementById("recommend-playlist");
-
+    let addButton = document.getElementById("create-new-song-button");
+    
     let myMusicPlaylist = [];
     let recommendPlaylist = [];
     
@@ -21,21 +24,36 @@ function init ()
         Utils.bdUserPlaylistLoad(undefined, () => { myMusicPlaylist = window.userPlaylist; });
     }
 
+    addButton.addEventListener("click", event =>
+    {
+        modalPageControler("create");
+    });
+
     function playlistInit() // Стартовая прогрузка элементов плейлиста (вынести html в отдельную функцию)
     {
         let position = 0;
         for (let item of myMusicPlaylist)
         {
-            let elem = songElementCreater(position, item.trackPatch, item.imagePatch, item.trackName, item.autor);
+            let elem = songElementCreater(
+                position,
+                item.trackPatch,
+                baseImage,
+                item.trackName,
+                item.autor);
             myMusicPlaylistElement.append(elem);
+
+            if (item.imagePatch !== undefined && item.imagePatch !== null && item.imagePatch !== "")
+            {
+                Utils.setSourceFromStorage(item.imagePatch, elem.querySelector("img"));
+            }
             position++;
         }
 
         for (let item of recommendPlaylist)
         {
-            let elem = songElementCreater(position, item.trackPatch, item.imagePatch, item.trackName, item.autor);
-            recommendPlaylistElement.append(elem);
-            position++;
+            // let elem = songElementCreater(position, item.trackPatch, item.imagePatch, item.trackName, item.autor);
+            // recommendPlaylistElement.append(elem);
+            // position++;
         }
     }
 

@@ -12,8 +12,6 @@ import CurrentPlaylist from "./views/pages/CurrentPlaylistPage.js";
 import Playlists from "./views/pages/PlaylistsPage.js";
 
 
-window.baseImage = "../source/music_base.png";
-
 // Supported routes
 const routes =
 {
