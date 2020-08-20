@@ -6,10 +6,11 @@ function init()
     let emailElement    = document.getElementById("email");
     let passwordElement = document.getElementById("password");
 
-    signInElement.addEventListener("click", () => 
+    function execute()
     {
         firebase.auth().signInWithEmailAndPassword(emailElement.value, passwordElement.value).then(() =>
         {
+            passwordElement.value = "";
             document.location.href = "/#/CurrentPlaylist";
         }).catch(
             (error) =>
@@ -27,6 +28,15 @@ function init()
                     alert("Error" + errorCode + ": " + errorMessage);
                 }
             });
+    }
+
+    signInElement.addEventListener("click", execute);
+    document.addEventListener('keydown', event =>
+    {
+        if (event.keyCode === 13 && passwordElement.value !== "") 
+        {
+            execute();
+        }
     });
 }
 

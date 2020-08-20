@@ -33,6 +33,18 @@ let Functions =
             elem.style.opacity = opacity;
             opacity += opacity * 0.1;
         }, time);
+    },
+
+    stubElement: (message) =>
+    {
+        let elem = document.createElement("li");
+        elem.classList.add("playlist-item");
+        elem.innerHTML = 
+        `<div class="song-track-info">
+            <div class="message">` + message + `</div>
+        </div>`
+
+        return elem;
     }
 };
 

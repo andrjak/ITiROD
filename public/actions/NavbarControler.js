@@ -9,6 +9,8 @@ function init()
         firebase.auth().signOut().then(function()
         {
             // Sign-out successful.
+            window.audio.pause();
+            window.audio = undefined;
             document.location.href = "/#/Login";
         }).catch(function(error) 
         {

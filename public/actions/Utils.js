@@ -53,6 +53,11 @@ let Utils =
         else
         {
             sourceElement.src = patch;
+
+            if (typeof then == "function")
+            {
+                then();
+            }
         }
     },
 
@@ -60,79 +65,185 @@ let Utils =
     {
         window.userPlaylist = [];
 
-        let music = firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("music");
-
-        music.get().then(querySnapshot =>
+        firebase.auth().onAuthStateChanged(function (user)
         {
-            let counter = 0;
-            querySnapshot.forEach(songPatchDoc => 
+            if (user)
             {
-                let currentDoc = firebase.firestore().doc(songPatchDoc.data().patch);
-                currentDoc.get().then(doc => 
+                let music = firebase.firestore().collection("users").doc(user.uid).collection("music");
+
+                music.get().then(querySnapshot =>
                 {
-                    if (doc.exists)
+                    let counter = 0;
+                    querySnapshot.forEach(songPatchDoc => 
                     {
-                        let item = doc.data();
-                        userPlaylist.push(new Song(item.status, item.songName, item.songAutor, item.songPatch, item.imagePatch, doc.id));
-                        if (oneRecordLoaded !== undefined && typeof oneRecordLoaded === "function")
+                        let currentDoc = firebase.firestore().doc(songPatchDoc.data().patch);
+                        currentDoc.get().then(doc => 
                         {
-                            oneRecordLoaded();
-                        }
-                        counter++;
-                        if (counter === querySnapshot.size)
-                        {
-                            if (allRecordLoaded !== undefined && typeof allRecordLoaded === "function")
+                            if (doc.exists)
                             {
-                                allRecordLoaded();
+                                let item = doc.data();
+                                userPlaylist.push(new Song(item.status, item.songName, item.songAutor, item.songPatch, item.imagePatch, doc.id));
+                                window.userPlaylist.reverse();
+                                if (typeof oneRecordLoaded === "function")
+                                {
+                                    oneRecordLoaded();
+                                }
+                                counter++;
+                                if (counter === querySnapshot.size)
+                                {
+                                    if (typeof allRecordLoaded === "function")
+                                    {
+                                        allRecordLoaded();
+                                    }
+                                }
                             }
-                        }
-                    }
-                    else
-                    {
-                        let result = confirm("Perhaps one of the entries has been removed from public access, you want to remove it from the playlist. If it remains, then this message will appear every time the playlist is loaded until the entry is deleted or access is restored.");
-                    
-                        if (result == true)
+                            else
+                            {
+                                let result = confirm("Perhaps one of the entries has been removed from public access, you want to remove it from the playlist. If it remains, then this message will appear every time the playlist is loaded until the entry is deleted or access is restored.");
+                            
+                                if (result == true)
+                                {
+                                    music.doc(songPatchDoc.id).delete().then(
+                                    () =>
+                                    {
+                                        console.log("Song delete.");
+                                    }).catch(event =>
+                                    {
+                                        alert("Failed to delete song: ", error);
+                                    });
+                                }
+                            }
+                        }).catch((error) =>
                         {
-                            songPatchDoc.delete().then(
-                                () =>
-                                {
-                                    console.log("Song delete.");
-                                }).catch(event =>
-                                {
-                                    alert("Failed to delete song: ", error);
-                                });
-                        }
-                    }
-                }).catch((error) =>
+                            console.log("Document error: " + error.message);
+                        });
+                    });
+                }).catch((error) => 
                 {
-                    console.log("Document error: " + error.message);
+                    console.log("Collection error: " + error.message);
                 });
-            });
-        }).catch((error) => 
-        {
-            console.log("Collection error: " + error.message);
+            }
         });
+
     },
 
     bdAllMusicPlaylistLoad : (oneRecordLoaded, allRecordLoaded) =>
     {
-        let playlist = []
-        let music = firebase.firestore().collection("songs");
-
-        music.get().then(querySnapshot =>
+        if (window.allPlaylist === undefined)
         {
-            if (querySnapshot.size <= 20)
-            {
-                querySnapshot.forEach(doc => 
-                {
-                    let item = doc.data();
+            window.allPlaylist = [];
+        }
 
-                    if (item.status)
+        let patch = firebase.firestore().collection("songs").where("status", "==", true).orderBy("songPatch");
+
+        if (window.lastVisible === undefined)
+        {
+            patch.limit(5).get().then(documentSnapshots =>
+            {
+                window.lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
+        
+                let counter = 0;
+                documentSnapshots.forEach(doc => 
                     {
-                        playlist.push(new Song(item.status, item.songName, item.songAutor, item.songPatch, item.imagePatch, doc.id))
-                    }
-                });
-            }
+                        if (doc.exists)
+                        {
+                            let item = doc.data();
+                            window.allPlaylist.push(new Song(item.status, item.songName, item.songAutor, item.songPatch, item.imagePatch, doc.id));
+                            if (typeof oneRecordLoaded === "function")
+                            {
+                                oneRecordLoaded();
+                            }
+
+                            counter++;
+                            if (counter === documentSnapshots.docs.length)
+                            {
+                                if (typeof allRecordLoaded === "function")
+                                {
+                                    allRecordLoaded();
+                                }
+                            }
+                        }
+                    });
+            }).catch((error) => console.error("Load error: ", error));
+        }
+        else
+        {
+            patch.limit(5).startAfter(window.lastVisible).get().then(documentSnapshots =>
+            {
+                window.lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
+
+                let counter = 0;
+                documentSnapshots.forEach(doc => 
+                    {
+                        if (doc.exists)
+                        {
+                            let item = doc.data();
+                            window.allPlaylist.push(new Song(item.status, item.songName, item.songAutor, item.songPatch, item.imagePatch, doc.id));
+                            if (typeof oneRecordLoaded === "function")
+                            {
+                                oneRecordLoaded();
+                            }
+
+                            counter++;
+                            if (counter === documentSnapshots.docs.length)
+                            {
+                                if (typeof allRecordLoaded === "function")
+                                {
+                                    allRecordLoaded();
+                                }
+                            }
+                        }
+                    });
+            }).catch((error) => console.error("Load error: ", error));
+        }
+    },
+
+    bdAddNewDocInUserPlaylist : (dbSongId, then) =>
+    {
+        firebase.auth().onAuthStateChanged(function (user)
+        {
+            firebase.firestore().collection("users").doc(user.uid).collection("music").add
+            ({
+                patch: "/songs/" + dbSongId
+            }).then(doc =>
+            {
+                if (typeof then == "function")
+                {
+                    then();
+                }
+            }).catch(error => {});
+        });
+    },
+
+    bdGlobalSearch : (array, value, then) =>
+    {
+        let patch = firebase.firestore().collection("songs");
+
+        patch.where("trackName", "==", value).get().then(documentSnapshots =>
+        {
+            let counter = 0;
+            documentSnapshots.forEach(doc => 
+            {
+                let item = doc.data();
+                array.push(new Song(item.status, item.songName, item.songAutor, item.songPatch, item.imagePatch, doc.id));
+
+                counter++;
+                if (counter === documentSnapshots.size)
+                {
+                    patch.where("autor", "==", value).get().then(documentSnapshots =>
+                        {
+                            documentSnapshots.forEach(doc => 
+                            {
+                                let item = doc.data();
+                                array.push(new Song(item.status, item.songName, item.songAutor, item.songPatch, item.imagePatch, doc.id));
+                                if (typeof then == "function")
+                                {
+                                    then();
+                                }
+                            });
+                        });
+                }
+            });
         });
     }
 };

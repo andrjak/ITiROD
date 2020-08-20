@@ -9,14 +9,14 @@ let MyMusic = {
         <button id="create-new-song-button" class="modal-button">
             Add new song
         </button>
-        <article class="card card-right">
-            <ul id="my-playlist" class="playlist">
+        <article class="card">
+            <ul id="my-playlist" class="playlist user-play-list">
 
             </ul>
         </article>
 
-        <article class="card card-right">
-            <ul id="recommend-playlist" class="playlist">
+        <article id="all-music" class="card">
+            <ul id="recommend-playlist" class="playlist all-play-list">
 
             </ul>
         </article>

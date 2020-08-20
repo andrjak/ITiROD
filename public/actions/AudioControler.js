@@ -36,15 +36,13 @@ async function AudioControler()
     // Текущий плей лист
     let playlist = document.getElementById("playlist");
 
-    let playlistItemList = []; // Набор всех HTML элементов отображаемых в плейлисте
-    let currentPlaylistItem = null; // Выбранный на данный момент элемент
-    let selectedTime = 0;
-
     // Первое открытие страницы. Создание глобальных переменных которые отвечают за фоновое воспроизведение
     // и востановление страницы после возвращения с другой страницы сайта.
     if (window.audio === undefined)
     {
-        //window.playlist
+        window.playlistItemList = []; // Набор всех HTML элементов отображаемых в плейлисте
+        window.currentPlaylistItem = null; // Выбранный на данный момент элемент
+        window.selectedTime = 0;
         window.audio = new Audio(); // Объект отвечающий за воспроизведение музыки (должен быть доступен после возвращения на страницу)
         window.currentTrackPosition = 0; // Номер текущей записи в плей листе
         window.selectedPosition = 0; // Позиция с которой воспроизоводится запись
@@ -59,12 +57,13 @@ async function AudioControler()
                 Utils.bdUserPlaylistLoad(undefined, () =>
                 {
                     window.currentPlaylist = window.userPlaylist;
-                    run()
+                    run();
                 });
             }
             else
             {
                 window.currentPlaylist = window.userPlaylist;
+                run();
             }
         }
         else
@@ -82,15 +81,17 @@ async function AudioControler()
     {
         setTimeout(function()
         {
-            if (audio.paused)
+            if (!window.play)
             {
                 playPauseButtonStyle.className = "fas fa-pause";  // Меняем значение атрибута class в элементе i на fas fa-pause (значок паузы)
                 audio.play();
+                window.play = true;
             }
             else
             {
                 playPauseButtonStyle.className = "fas fa-play"; // Меняем значение атрибута class в элементе i на fas fa-pause (значок запуска)
                 audio.pause();
+                window.play = false;
             }
         }, 300);
     }
@@ -148,24 +149,61 @@ async function AudioControler()
         hideHover();
     }
 
+    // Воспроизведение выбранной записи
     function playlistItemPlayHandler(event)
     {
         if (event.target.classList.contains("play-button-event"))
         {
-            let item = event.target.closest("li");
-            window.currentTrackPosition = item.playlistPosition;
-            selectTrack(undefined, playPause);
+            let selectedSongItem = event.target.closest("li");
+            if (selectedSongItem === null || selectedSongItem === undefined)
+            {
+                console.log("play-button-event: 'li' item not found.");
+                return;
+            }
+
+            window.currentTrackPosition = selectedSongItem.playlistPosition;
+
+            window.play = true;
+            selectTrack(undefined, () =>
+            {
+                setTimeout(() =>
+                {
+                    playPauseButtonStyle.className == "fas fa-pause"
+                    window.audio.play();
+                }, 350);
+            });
         }
     }
 
+    // Добавление записи из списка
     function playlistItemAddHandler(event)
     {
         if (event.target.classList.contains("add-button-event"))
         {
-            alert("Add: Don't Work!");
+            let selectedSongItem = event.target.closest("li");
+            if (selectedSongItem === null || selectedSongItem === undefined)
+            {
+                console.log("add-button-event: 'li' item not found.");
+                return;
+            }
+
+            Utils.bdAddNewDocInUserPlaylist(currentPlaylist[selectedSongItem.playlistPosition].dbId, () =>
+            {
+                if (window.userPlaylist !== undefined && window.userPlaylist !== null && window.currentTrackPosition !== undefined)
+                {
+                    window.currentTrackPosition++;
+                    window.userPlaylist.unshift(result);
+                }
+                else
+                {
+                    window.currentTrackPosition = 0;
+                    window.userPlaylist[result];
+                }
+            });
         }
     }
 
+    // Настройки записи (если есть права на её изменение)
     function playlistItemOptionsHandler(event)
     {
         if (event.target.classList.contains("options-button-event"))
@@ -176,10 +214,26 @@ async function AudioControler()
                 console.log("option-button-event: 'li' item not found.");
                 return;
             }
-            modalPageControler("update", selectedSongItem.querySelector("img").src, currentPlaylist[selectedSongItem.playlistPosition], () => {addItemsInHTMList()});
+
+            let fun = null;
+            if (selectedSongItem.classList.contains("active"))
+            {
+                fun = () =>
+                { 
+                    restartPage(); 
+                    addItemsInHTMList();
+                };
+            }
+            else
+            {
+                fun = addItemsInHTMList;
+            }
+
+            modalPageControler("update", selectedSongItem.querySelector("img").src, currentPlaylist[selectedSongItem.playlistPosition], () => {fun()});
         }
     }
 
+    // Удаление записи из плей листа
     function playlistItemDelete(event)
     {
         if (event.target.classList.contains("delete-button-event"))
@@ -193,20 +247,34 @@ async function AudioControler()
             let selectedSongItem = event.target.closest("li");
             if (selectedSongItem === null || selectedSongItem === undefined)
             {
-                console.log("option-button-event: 'li' item not found.");
+                console.log("delete-button-event: 'li' item not found.");
                 return;
             }
 
             let song = currentPlaylist[selectedSongItem.playlistPosition];
 
-            firebase.firestore().collection("songs").doc(song.dbId).delete().then(
-            () =>
+            let music = firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("music");
+
+            music.where("patch", "==", "/songs/" + song.dbId).get().then(querySnapshot => 
             {
-                console.log("Song delete.");
+                querySnapshot.forEach(doc => 
+                    {
+                        music.doc(doc.id).delete().then(() => {console.log("Song delete.")})
+                        .catch(() => {console.log("Erroe: song not delete.")})
+                    });
             }).catch(event => 
             {
                 alert("Failed to delete song: ", error);
             });
+
+            if (currentTrackPosition > selectedSongItem.playlistPosition)
+            {
+                currentTrackPosition--;
+            }
+            currentPlaylist.splice(selectedSongItem.playlistPosition, 1);
+            addItemsInHTMList();
+            selectActiveTrack();
+            //selectTrack();
         }
     }
 
@@ -216,8 +284,33 @@ async function AudioControler()
         if (currentPlaylist.length > window.currentTrackPosition)
         {
             ++window.currentTrackPosition;
-            selectTrack(undefined, playPause);
         }
+        else
+        {
+            playPauseButtonStyle.className = "fas fa-play";
+            window.audio.pause();
+            window.play = false;
+        }
+
+        selectTrack(undefined, () =>
+        {
+            if (window.play)
+            {
+                setTimeout(() =>
+                {
+                    window.audio.play();
+                    window.play = true;
+                }, 350);
+            }
+            else
+            {
+                setTimeout(() =>
+                {
+                    window.audio.pause();
+                    window.play = false;
+                }, 350);
+            }
+        });
     }
 
     // Переход к предыдущей записи
@@ -226,8 +319,33 @@ async function AudioControler()
         if (0 < window.currentTrackPosition)
         {
             --window.currentTrackPosition;
-            selectTrack(undefined, playPause);
         }
+        else
+        {
+            playPauseButtonStyle.className = "fas fa-play";
+            window.audio.pause();
+            window.play = false;
+        }
+
+        selectTrack(undefined, () =>
+        {
+            if (window.play)
+            {
+                setTimeout(() =>
+                {
+                    window.audio.play();
+                    window.play = true;
+                }, 350);
+            }
+            else
+            {
+                setTimeout(() =>
+                {
+                    window.audio.pause();
+                    window.play = false;
+                }, 350);
+            }
+        });
     }
 
     // Показать всплывающую табличку с временем в указанной точке
@@ -296,29 +414,61 @@ async function AudioControler()
     // Выбор новой записи из плейлиста
     function selectTrack(imageThen, audioThen)
     {
-        selectActiveTrack();
+        if (window.play)
+        {
+            playPauseButtonStyle.className = "fas fa-pause";
+        }
+        else
+        {
+            playPauseButtonStyle.className = "fas fa-play";
+        }
+
+        if (currentPlaylist === undefined || currentPlaylist.length <= 0)
+        {
+            return;
+        }
 
         let currentTrack = currentPlaylist[window.currentTrackPosition];
 
-        let durationMinutes = Math.floor(audio.duration / 60);
-        let durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
-        durationMinutes = durationMinutes < 10 ? "0" + durationMinutes : durationMinutes;
-        durationSeconds = durationSeconds < 10 ? "0" + durationSeconds : durationSeconds;
+        selectActiveTrack();
 
         trackName.textContent = currentTrack.trackName;
         trackAutor.textContent = currentTrack.autor;
 
         Utils.setSourceFromStorage(currentTrack.trackPatch, audio, imageThen);
-        Utils.setSourceFromStorage(currentTrack.imagePatch, trackImage, audioThen);
+        Utils.setSourceFromStorage(currentTrack.imagePatch, trackImage, () =>
+        {
+            let durationMinutes = Math.floor(audio.duration / 60);
+            let durationSeconds = Math.floor(audio.duration - durationMinutes * 60);
+            durationMinutes = durationMinutes < 10 ? "0" + durationMinutes : durationMinutes;
+            durationSeconds = durationSeconds < 10 ? "0" + durationSeconds : durationSeconds;
 
-        currentTime.textContent = "00:00";
-        if(isNaN(durationMinutes) || isNaN(durationSeconds))
+            currentTime.textContent = "00:00";
+            if(isNaN(durationMinutes) || isNaN(durationSeconds))
+            {
+                trackLength.textContent = "00:00";
+            }
+            else
+            {
+                trackLength.textContent = durationMinutes + ":" + durationSeconds;
+            }
+
+            if (typeof audioThen == "function")
+            {
+                audioThen();
+            }
+        });
+
+        if (audio.loop)
         {
-            trackLength.textContent = "00:00";
+            playRepeatButton.classList.remove("active");
+            playRepeatButton.classList.add("active");
         }
-        else
+
+        if (window.mixStatus)
         {
-            trackLength.textContent = durationMinutes + ":" + durationSeconds;
+            playMixButton.classList.remove("active");
+            playMixButton.classList.add("active");
         }
 
         seekBar.style.width = 0;
@@ -327,20 +477,30 @@ async function AudioControler()
     // Востановление страницы после возврата на неё
     function restartPage()
     {
-        if (audio.paused)
+        if (window.play)
         {
-            playPauseButtonStyle.className = "fas fa-play";
+            playPauseButtonStyle.className = "fas fa-pause";
         }
         else
         {
-            playPauseButtonStyle.className = "fas fa-pause"; 
+            playPauseButtonStyle.className = "fas fa-play";
         }
         
         selectActiveTrack();
 
-        if (audio.loop === true)
+        if (audio.loop)
         {
             playRepeatButton.classList.add("active");
+        }
+
+        if (window.mixStatus)
+        {
+            playMixButton.classList.add("active");
+        }
+
+        if (currentPlaylist === undefined || currentPlaylist.length <= 0)
+        {
+            return;
         }
 
         let currentTrack = currentPlaylist[window.currentTrackPosition];
@@ -357,11 +517,6 @@ async function AudioControler()
     // (К сожалению пока грузится сразу весь плейлист. Подумать об реализации AJAX через firebase)
     function addItemsInHTMList()
     {
-        if (currentPlaylist === undefined || currentPlaylist === null)
-        {
-            return;
-        }
-
         playlist.innerHTML = "";
         let position = 0;
         let buttonType = "add";
@@ -384,13 +539,25 @@ async function AudioControler()
 
     function run()
     {
+        if (window.currentPlaylist === undefined)
+        {
+            window.currentPlaylist = window.userPlaylist;
+        }
+
         addItemsInHTMList();
 
         playlistItemList = playlist.querySelectorAll("li");
         currentPlaylistItem = playlistItemList[window.currentTrackPosition];
 
-        if (audio.currentTime == 0) // Первый вход на страницу
+        if (window.currentPlaylist.length <= 0)
         {
+            let elem = Function.stubElement("The current playlist is empty");
+            playlist.append(elem);
+        }
+
+        if (audio.currentTime == 0 || window.restart) // Первый вход на страницу
+        {
+            window.restart = false;
             selectTrack();
         }
         else // Рестарт после перехода с другой страницы
@@ -416,8 +583,41 @@ async function AudioControler()
             }
         });
         playMixButton.addEventListener("click", function()
-        { 
-            alert("MixButton: Don't work") 
+        {
+            if (currentPlaylist !== undefined && currentPlaylist !== null && currentPlaylist.length !== 0)
+            {
+                window.play = false;
+                window.audio.pause();
+                playPauseButtonStyle.className = "fas fa-play";
+
+                if (window.mixStatus === undefined || window.mixStatus === false)
+                {
+                    window.mixStatus = true;
+                    window.correctSequence = currentPlaylist.slice();
+                    shuffle(currentPlaylist);
+                    playMixButton.classList.add("active");
+                }
+                else
+                {
+                    window.mixStatus = false;
+                    currentPlaylist = window.correctSequence;
+                    delete window.correctSequence;
+                    playMixButton.classList.remove("active");
+                }
+                
+                addItemsInHTMList();
+                selectActiveTrack();
+                selectTrack();
+
+                function shuffle(array) 
+                {
+                    for (let i = array.length - 1; i > 0; i--)
+                    {
+                    let j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                    }
+                }
+            }
         });
 
         playlist.addEventListener("click", playlistItemPlayHandler);
@@ -425,29 +625,27 @@ async function AudioControler()
         playlist.addEventListener("click", playlistItemOptionsHandler);
         playlist.addEventListener("click", playlistItemDelete);
 
-        playlist.addEventListener("error", function (event)
+        playlist.addEventListener("error", event =>
         {
             event.target.src = baseImage;
         });
 
-        trackImage.addEventListener("error", function ()
+        trackImage.addEventListener("error", () =>
         {
             trackImage.src = baseImage;
         });
 
-        audio.addEventListener("ended", nextTrack);
-        audio.addEventListener("timeupdate", updateTime);
-        audio.addEventListener("error", function (event) 
+        audio.onended = nextTrack;
+        audio.ontimeupdate = updateTime;
+        audio.onerror = event =>
         { 
             alert(`An error has occurred. Audio cannot be played.
             Check your connection and try starting another recording.`); 
-        });
+        };
 
         sArea.addEventListener("mousemove", showHover);
         sArea.addEventListener("mouseout", hideHover);
         sArea.addEventListener("click", playFromClickedPosition);
-
-        console.dir(playlist);
     }
 }
 export default AudioControler;

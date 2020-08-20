@@ -31,6 +31,7 @@ function ModalPageControler(mode, imageSrc, selectedSong, then)
     let imageFile = undefined;
     let songFile = undefined;
     let resultSong = undefined;
+    let songPatch = undefined;
 
     // Выход с модального окна
     modalCancelButton.onclick = event =>
@@ -63,6 +64,17 @@ function ModalPageControler(mode, imageSrc, selectedSong, then)
             let data = event.dataTransfer;
             songFile = data.files[0];
             modalSongText.textContent = data.files[0].name;
+
+            var reader = new FileReader();
+            reader.onload = (
+                function() 
+                { 
+                    return function(e) 
+                    {
+                        songPatch = e.target.result;
+                    };
+                })();
+            reader.readAsDataURL(data.files[0]);
         }
     };
 
@@ -93,6 +105,17 @@ function ModalPageControler(mode, imageSrc, selectedSong, then)
         {
             songFile = event.target.files[0];
             modalSongText.textContent = songFile.name;
+
+            var reader = new FileReader();
+            reader.onload = (
+                function() 
+                { 
+                    return function(e) 
+                    {
+                        songPatch = e.target.result;
+                    };
+                })();
+            reader.readAsDataURL(event.target.files[0]);
         }
     };
 
@@ -158,6 +181,9 @@ function ModalPageControler(mode, imageSrc, selectedSong, then)
             alert("Failed to update song: ", error);
         });
 
+
+        result.imagePatch = modalImage.src;
+
         if (window.userPlaylist !== undefined && window.userPlaylist !== null)
         {
             for (let len = 0; len < window.userPlaylist.length; len++)
@@ -180,7 +206,7 @@ function ModalPageControler(mode, imageSrc, selectedSong, then)
             }
         }
 
-        if (then !== undefined && typeof then == "function")
+        if (typeof then == "function")
         {
             then();
         }
@@ -207,10 +233,6 @@ function ModalPageControler(mode, imageSrc, selectedSong, then)
         }
 
         let dbSongName = "songs/" + user.uid + "time" + createTime + songFile.name;
-        firebase.storage().ref(dbSongName).put(songFile).then(snapshot =>
-        {
-            console.log("song-load");
-        });
 
         let dbImageName = undefined;
         if (modalImage.src !== imageSrc && imageFile !== undefined)
@@ -250,21 +272,28 @@ function ModalPageControler(mode, imageSrc, selectedSong, then)
             patch: "/songs/" + dbSongId
         }).then(doc =>{}).catch(error => {});
 
-        if (window.userPlaylist !== undefined && window.userPlaylist !== null && window.currentTrackPosition !== undefined)
-        {
-            window.currentTrackPosition++;
-            window.userPlaylist.unshift(result);
-        }
-        else
-        {
-            window.currentTrackPosition = 0;
-            window.userPlaylist[result];
-        }
+        firebase.storage().ref(dbSongName).put(songFile).then(snapshot =>
+            {
+                console.log("song-load");
+            });
 
-        if (then !== undefined && typeof then == "function")
-        {
-            then();
-        }
+            result.imagePatch = modalImage.src;
+            result.trackPatch = songPatch;
+            if (window.userPlaylist !== undefined && window.userPlaylist !== null && window.currentTrackPosition !== undefined)
+            {
+                window.currentTrackPosition++;
+                window.userPlaylist.unshift(result);
+            }
+            else
+            {
+                window.currentTrackPosition = 0;
+                window.userPlaylist[result];
+            }
+    
+            if (typeof then == "function")
+            {
+                then();
+            }
 
         return result;
     }
@@ -274,14 +303,16 @@ function ModalPageControler(mode, imageSrc, selectedSong, then)
     // * imageSrc - уже трансформированная ссылка на ресурс если она есть
     // * selectedSong - выбраная запись если она есть
     // * then - функция которая выполняется после добавления или обновления записи
-    function ModalPageControler (localMode, imageSrc, localSelectedSong, then)
+    function ModalPageControler (localMode, imageSrc, localSelectedSong, localThen)
     {
         user = firebase.auth().currentUser;
         mode = localMode;
+        then = localThen;
         selectedSong = localSelectedSong;
         resultSong = undefined;
         imageFile = undefined;
         songFile = undefined;
+        songPatch = undefined;
         modalStatusInput.checked = false;
         modalImage.src = (imageSrc === undefined || imageFile === null) ? baseImage : imageSrc;
         modalSongText.textContent = "Select file (can drop)";
@@ -322,7 +353,7 @@ function ModalPageControler(mode, imageSrc, selectedSong, then)
         return resultSong;
     }
 
-    return ModalPageControler(mode, imageSrc, selectedSong);
+    return ModalPageControler(mode, imageSrc, selectedSong, then);
 }
 
 export default ModalPageControler;
