@@ -38,17 +38,17 @@ async function AudioControler()
 
     // Первое открытие страницы. Создание глобальных переменных которые отвечают за фоновое воспроизведение
     // и востановление страницы после возвращения с другой страницы сайта.
-    if (window.audio === undefined)
+    if (!window.audio)
     {
         window.playlistItemList = []; // Набор всех HTML элементов отображаемых в плейлисте
         window.currentPlaylistItem = null; // Выбранный на данный момент элемент
         window.selectedTime = 0;
         window.audio = new Audio(); // Объект отвечающий за воспроизведение музыки (должен быть доступен после возвращения на страницу)
-        window.currentTrackPosition = 0; // Номер текущей записи в плей листе
         window.selectedPosition = 0; // Позиция с которой воспроизоводится запись
 
         if (window.currentPlaylist === undefined || window.currentPlaylist === null) // Получение плейлиста(пользовательского) из базы данных елси он не был получен рание
         {
+            window.currentTrackPosition = 0; // Номер текущей записи в плей листе
             window.isCurrentPlaylistUserPlaylist = true;
             window.currentPlaylist = []; // Глобальная переменная отвечающая за текущий плей лист
 
@@ -551,7 +551,7 @@ async function AudioControler()
 
         if (window.currentPlaylist.length <= 0)
         {
-            let elem = Function.stubElement("The current playlist is empty");
+            let elem = Functions.stubElement("The current playlist is empty");
             playlist.append(elem);
         }
 

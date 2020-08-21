@@ -82,6 +82,7 @@ li a {
 
 a:hover {
     color: darkgreen;
+    /*color: goldenrod;*/
 }
 
 .form-search {
@@ -318,11 +319,13 @@ a:hover {
 #track-name
 {
     margin-right: auto;
+    font-size: small;
 }
 
 #autor-name
 {
     margin-left: auto;
+    color: goldenrod;
 }
 
 #track-time
@@ -592,7 +595,7 @@ html .main-form
     width: 150px;
 }
 
-.modal-content 
+.modal-content
 {
     background-color: var(--main-dark-gray);
     border: 2px solid gold;
@@ -637,34 +640,6 @@ html .main-form
     flex-flow: column nowrap;
     justify-content: space-between;
 }
-
-/* .modal-close
-{
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-end;
-  margin-left: auto;
-  margin-top: 3px;
-  margin-right: 3px;
-  width: 100%;
-  font-size: large;
-}
-
-.modal-close button
-{
-    color: black;
-    font-size: large;
-    background-image: none; 
-    background-color: transparent;
-    outline: none;
-    border: 0;
-}
-
-.modal-close button:hover
-{
-    color: red;
-    cursor: pointer;
-} */
 
 .modal-actions
 {
@@ -741,4 +716,9 @@ label a
     min-width: 25px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.autor-name
+{
+    color: goldenrod;
 }

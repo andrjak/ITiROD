@@ -13,7 +13,7 @@ let CurrentPlaylist = {
                     
                     <div class="track-info" id="player-track">
                         <div class="track-text-info">
-                            <div id="track-name"></div>
+                            <b id="track-name"></b>
                             <em id="autor-name"></em>
                         </div>
                         <div id="s-area">

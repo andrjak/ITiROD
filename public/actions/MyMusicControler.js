@@ -240,6 +240,7 @@ function MyMusicControler()
 
         if (value == "")
         {
+            recovery();
             return;
         }
 
@@ -276,8 +277,8 @@ function MyMusicControler()
         {
             Utils.bdGlobalSearch(selectedAllMusic, value, () =>
             {
-                recommendPlaylistElement.innerHTML("");
-                position = 0;
+                recommendPlaylistElement.innerHTML = "";
+                let position = 0;
                 for (let item of selectedAllMusic)
                 {
                     let elem = songElementCreater(
@@ -296,6 +297,18 @@ function MyMusicControler()
                     position++;
                  }
             });
+        }
+    }
+
+    function recovery()
+    {
+        if (searchInput.value == "")
+        {
+            window.userPlaylist = snapshotUserPlaylist;
+            window.allPlaylist = snapshotAllMusicPlaylist;
+
+            myMusicInit();
+            allMusicInit();
         }
     }
 
@@ -390,17 +403,7 @@ function MyMusicControler()
             }
         });
     
-        searchInput.addEventListener("change", () =>
-        {
-            if (searchInput.value == "")
-            {
-                window.userPlaylist = snapshotUserPlaylist;
-                window.allPlaylist = snapshotAllMusicPlaylist;
-
-                myMusicInit();
-                allMusicInit();
-            }
-        });
+        searchInput.addEventListener("change", recovery);
     }
 
     run();

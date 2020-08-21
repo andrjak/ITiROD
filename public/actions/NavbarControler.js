@@ -12,6 +12,7 @@ function init()
             window.audio.pause();
             window.audio = undefined;
             document.location.href = "/#/Login";
+            window.location.reload(true);
         }).catch(function(error) 
         {
             alert("Something went wrong:" + error);

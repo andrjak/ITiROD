@@ -217,31 +217,27 @@ let Utils =
 
     bdGlobalSearch : (array, value, then) =>
     {
+        value = value.toLowerCase();
         let patch = firebase.firestore().collection("songs");
 
-        patch.where("trackName", "==", value).get().then(documentSnapshots =>
+        patch.get().then(documentSnapshots =>
         {
             let counter = 0;
             documentSnapshots.forEach(doc => 
             {
-                let item = doc.data();
-                array.push(new Song(item.status, item.songName, item.songAutor, item.songPatch, item.imagePatch, doc.id));
-
                 counter++;
+                let item = doc.data();
+                if (item.songName.toLowerCase() == value || item.songAutor.toLowerCase() == value)
+                {
+                    array.push(new Song(item.status, item.songName, item.songAutor, item.songPatch, item.imagePatch, doc.id));
+                }
+                
                 if (counter === documentSnapshots.size)
                 {
-                    patch.where("autor", "==", value).get().then(documentSnapshots =>
-                        {
-                            documentSnapshots.forEach(doc => 
-                            {
-                                let item = doc.data();
-                                array.push(new Song(item.status, item.songName, item.songAutor, item.songPatch, item.imagePatch, doc.id));
-                                if (typeof then == "function")
-                                {
-                                    then();
-                                }
-                            });
-                        });
+                    if (typeof then == "function")
+                    {
+                        then();
+                    }
                 }
             });
         });
