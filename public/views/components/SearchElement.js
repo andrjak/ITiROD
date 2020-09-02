@@ -1,7 +1,5 @@
 "use strict"
 
-import SearchControler from "../../actions/SearchControler.js";
-
 let searchBar = 
 {
     render : async () => 
@@ -17,7 +15,6 @@ let searchBar =
 
     after_render : async () => 
     {
-        await SearchControler();
     }
 }
 

@@ -13,7 +13,7 @@ function init()
             window.audio = undefined;
             document.location.href = "/#/Login";
             window.location.reload(true);
-        }).catch(function(error) 
+        }).catch(function(error)
         {
             alert("Something went wrong:" + error);
         }); 
