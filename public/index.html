@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Another music player</title>
+    <meta name="author" content="Valetko Andrey"/>
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.3.1/css/solid.css'> <!--Бесплатные иконки для приложения-->
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.3.1/css/fontawesome.css'> <!--Используются для кнопок плеера-->
+    <link href="./styles/main_stile.css" rel="stylesheet"/>
+
+    <!-- update the version number as needed -->
+    <script defer src="https://www.gstatic.com/firebasejs/7.14.5/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="https://www.gstatic.com/firebasejs/7.14.5/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.14.5/firebase-database.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.14.5/firebase-messaging.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.14.5/firebase-storage.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.14.5/firebase-firestore.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
+  </head>
+  <body>
+    <noscript>For the site to work, you must enable scripts</noscript>
+    <header id="navbar"></header>
+    <div id="searchbar"></div>
+
+    <div id="modal-page" class="modal">
+      <div class="modal-content">
+        <div class="modal-song-container">
+
+          <label for="modal-img-field" style="display: block;">
+              <a id="modal-get-image-button" style="cursor: pointer;">
+                  <img id="modal_song_img" height = "300px" width = "300px">
+              </a>
+          </label>
+
+          <input class="modal-file" type="file" id="modal-img-field" accept="image/*">
+
+          <div class="modal-song-info">
+            <div class="modal-form">
+              <input class="modal-input" id="modal-name" type="text" placeholder="Song name" maxlength="30">
+              <input class="modal-input" id="modal-autor" type="text" placeholder="Song autor" maxlength="30">
+              <label class="modal-input" id="modal-song-label" for="modal-song-patch">
+                <a id="modal-song-text">Select file (can drop)</a>
+                <input id="modal-song-patch" type="file" accept="audio/*" style="display: none;">
+              </label>
+              <div class="modal-status-panel">
+                <span>Can other users listen to the song<span>
+                <input class="modal-input-checkbox" id="modal-status" type="checkbox"></input>
+              </div>
+            </div>
+
+            <div class="modal-actions">
+              <button id="modal-update-button" class="modal-button">Ok</button>
+              <button id="modal-cancel-button" class="modal-button">Cancel</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <main id="app-root" class="container"></main>
+    <script defer type="module" src="app.js"></script>
+  </body>
+</html>
